@@ -1,6 +1,9 @@
 import express from "express";
 import db from "./config/db";
-import RouterInventory from "./routes/router.inventory";
+import RouterSKU from "./routes/Router.SKU";
+import RouterType from "./routes/Router.Type";
+import RouterMaterial from "./routes/Router.Material";
+
 // Define Conection to the Data Base
 async function connectDB() {
 	try {
@@ -21,5 +24,7 @@ server.use(cors());
 server.use(express.json());
 
 // Define API Routes
-server.use("/API/Inventory", RouterInventory)
+server.use("/API/SKU", RouterSKU)
+server.use("/API/Type", RouterType)
+server.use("/API/Material", RouterMaterial)
 export default server;
