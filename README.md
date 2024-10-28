@@ -100,50 +100,49 @@ docker compose up
 # Project Structure
 ```
 .
-.
 ├── client
-│   ├── Dockerfile
-│   ├── index.html
-│   ├── public
-│   └── src
-│       ├── api
-│       │   └── AdminApi.ts
-│       ├── App.tsx
-│       ├── components
-│       │   ├── Header
-│       │   ├── Navbar
-│       │   └── pages
-│       ├── index.css
-│       ├── lib
-│       │   └── AxiosAdmin.ts
-│       ├── main.tsx
-│       └── types
-│           └── index.ts
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── public
+│   │   └── bolsa-de-plastico-en-caida-libre.jpeg
+│   └── src
+│       ├── api
+│       │   └── AdminApi.ts
+│       ├── App.tsx
+│       ├── components
+│       │   ├── Cards
+│       │   ├── Navbar
+│       │   └── pages
+│       ├── index.css
+│       ├── lib
+│       │   └── AxiosAdmin.ts
+│       ├── main.tsx
+│       ├── types
+│       │   └── index.ts
+│       └── vite-env.d.ts
 ├── compose.yaml
 ├── README.md
 └── server
     ├── Dockerfile
     └── src
         ├── config
-        │   └── db.ts
+        │   └── db.ts
         ├── controllers
-        │   ├── Admin.Controller.ts
-        │   └── Attendance.Controller.ts
+        │   ├── MaterialController.ts
+        │   ├── SKUController.ts
+        │   └── TypeController.ts
         ├── index.ts
         ├── middleware
-        │   ├── index.ts
-        │   └── RutValidator.ts
+        │   └── index.ts
         ├── models
-        │   ├── Active.model.ts
-        │   ├── Admin.model.ts
-        │   ├── FingerPrint.model.ts
-        │   ├── Log.model.ts
-        │   └── User.model.ts
+        │   ├── Material.model.ts
+        │   ├── Product.models.ts
+        │   └── Type.models.ts
         ├── routes
-        │   ├── router.admin.ts
-        │   └── router.attendance.ts
+        │   ├── Router.Material.ts
+        │   ├── Router.SKU.ts
+        │   └── Router.Type.ts
         └── server.ts
-
 
 ```
 # Project Structure (Definition) (Update Needed)
