@@ -17,5 +17,10 @@ RouterType.post(
     TypeController.RemoveType
 )
 
+RouterType.get(
+    "/get-all-types",
+    HandleInputErros,
+    TypeController.GetAllTypes
+)
 
 export default RouterType;

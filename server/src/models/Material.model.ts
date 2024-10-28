@@ -2,6 +2,8 @@ import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType } from "seque
 
 @Table({
     tableName: "Material",
+    createdAt: false,
+    updatedAt: false
 })
 
 class Material extends Model {
