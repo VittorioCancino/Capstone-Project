@@ -143,7 +143,7 @@ docker compose up
         │   └── Router.Type.ts
         └── server.ts
 ```
-# Project Structure (Definition) (Update Needed)
+# Project Structure (Definition)
 ```
 .
 ├── client                               # Frontend application directory
