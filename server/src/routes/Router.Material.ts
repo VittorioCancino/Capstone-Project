@@ -17,5 +17,10 @@ RouterMaterial.post(
     MaterialController.RemoveMaterial
 )
 
+RouterMaterial.get(
+    "/get-all-materials",
+    HandleInputErros,
+    MaterialController.GetAllMaterials
+)
 
 export default RouterMaterial;

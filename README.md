@@ -1,6 +1,6 @@
 # Capstone-Project
 <p align="justify">
-    Official GitHub repository for the access control application implemented in the IT laboratory at Adolfo Ibáñez University. The development of this project uses <a href="https://www.typescriptlang.org/">TypeScript</a> as the main programming language. The frontend is implemented with <a href="https://react.dev/">React</a>, while the backend of the application is built using <a href="https://expressjs.com/">Express.js</a>, all running in the <a href="https://nodejs.org/">Node.js</a> environment. Additionally, the database used for the application is built with <a href="https://www.postgresql.org/">PostgreSQL</a>.
+    Official GitHub repository for the inventory management application developed for Industria Convertidora S.A., designed to tackle and optimize inventory issues within the organization. The development of this project uses <a href="https://www.typescriptlang.org/">TypeScript</a> as the main programming language. The frontend is implemented with <a href="https://react.dev/">React</a>, while the backend of the application is built using <a href="https://expressjs.com/">Express.js</a>, all running in the <a href="https://nodejs.org/">Node.js</a> environment. Additionally, the database used for the application is built with <a href="https://www.postgresql.org/">PostgreSQL</a>.
 </p>
 
 # Configuration and Deployment
@@ -100,86 +100,105 @@ docker compose up
 # Project Structure
 ```
 .
-.
 ├── client
-│   ├── Dockerfile
-│   ├── index.html
-│   ├── public
-│   └── src
-│       ├── api
-│       │   └── AdminApi.ts
-│       ├── App.tsx
-│       ├── components
-│       │   ├── Header
-│       │   ├── Navbar
-│       │   └── pages
-│       ├── index.css
-│       ├── lib
-│       │   └── AxiosAdmin.ts
-│       ├── main.tsx
-│       └── types
-│           └── index.ts
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── public
+│   │   └── bolsa-de-plastico-en-caida-libre.jpeg
+│   └── src
+│       ├── api
+│       │   └── AdminApi.ts
+│       ├── App.tsx
+│       ├── components
+│       │   ├── Cards
+│       │   ├── Navbar
+│       │   └── pages
+│       ├── index.css
+│       ├── lib
+│       │   └── AxiosAdmin.ts
+│       ├── main.tsx
+│       └── types
+│           └── index.ts
 ├── compose.yaml
 ├── README.md
 └── server
     ├── Dockerfile
     └── src
         ├── config
-        │   └── db.ts
+        │   └── db.ts
         ├── controllers
-        │   ├── Admin.Controller.ts
-        │   └── Attendance.Controller.ts
+        │   ├── MaterialController.ts
+        │   ├── SKUController.ts
+        │   └── TypeController.ts
         ├── index.ts
         ├── middleware
-        │   ├── index.ts
-        │   └── RutValidator.ts
+        │   └── index.ts
         ├── models
-        │   ├── Active.model.ts
-        │   ├── Admin.model.ts
-        │   ├── FingerPrint.model.ts
-        │   ├── Log.model.ts
-        │   └── User.model.ts
+        │   ├── Material.model.ts
+        │   ├── Product.models.ts
+        │   └── Type.models.ts
         ├── routes
-        │   ├── router.admin.ts
-        │   └── router.attendance.ts
+        │   ├── Router.Material.ts
+        │   ├── Router.SKU.ts
+        │   └── Router.Type.ts
         └── server.ts
-
-
 ```
-# Project Structure (Definition) (Update Needed)
+# Project Structure (Definition)
 ```
 .
-├── client                    # Frontend directory
-│   ├── Dockerfile            # Docker configuration for the frontend container
-│   ├── eslint.config.js      # ESLint configuration for linting and code style rules
-│   ├── index.html            # Main HTML file for the frontend application
-│   ├── package.json          # Contains dependencies and scripts for the frontend
-│   ├── package-lock.json     # Lock file that ensures consistent dependency versions
-│   ├── postcss.config.js     # Configuration for PostCSS (used for CSS processing)
-│   ├── src                   # Source files for the frontend
-│   │   ├── App.tsx           # Main React component file for the frontend
-│   │   ├── components        # Directory containing reusable components
-│   │   │   └── pages         # Directory for page-level components (full views)
-│   │   │       └── Home.tsx  # React component for the homepage
-│   │   ├── index.css         # Main CSS file for styling the application
-│   │   ├── main.tsx          # Entry point for the React app, renders the app to the DOM
-│   │   └── vite-env.d.ts     # TypeScript environment definitions for Vite
-│   ├── tailwind.config.js    # Tailwind CSS configuration file
-│   ├── tsconfig.json         # TypeScript configuration for the frontend
-│   ├── tsconfig.node.json    # TypeScript configuration specific for Node.js
-│   └── vite.config.ts        # Vite configuration for frontend build and dev server
-├── compose.yaml              # Docker Compose file used for deploying the application build
-├── README.md                 # Project documentation and instructions
-└── server                    # Backend directory
-    ├── Dockerfile            # Docker configuration for the backend container
-    ├── package.json          # Contains dependencies and scripts for the backend
-    ├── package-lock.json     # Lock file that ensures consistent dependency versions
-    ├── src                   # Source files for the backend
-    │   ├── config            # Directory for backend configuration files (e.g., database)
-    │   │   └── db.ts         # Database configuration for connecting to the DB
-    │   ├── index.ts          # Entry point for starting the backend server
-    │   └── server.ts         # Main server logic for handling requests
-    └── tsconfig.json         # TypeScript configuration for the backend
+├── client                               # Frontend application directory
+│   ├── Dockerfile                       # Instructions for building the client-side Docker image
+│   ├── eslint.config.js                 # ESLint configuration for code quality and style enforcement
+│   ├── index.html                       # Main HTML file where the React app is mounted
+│   ├── postcss.config.js                # PostCSS configuration for processing CSS with plugins
+│   ├── public                           # Directory for static assets
+│   │   └── bolsa-de-plastico-en-caida-libre.jpeg  # Static image asset
+│   ├── src                              # Source code directory for the frontend
+│   │   ├── api                          # Directory for API-related code
+│   │   │   └── AdminApi.ts              # Contains API calls related to admin functionalities
+│   │   ├── App.tsx                      # Main React component that initializes the app
+│   │   ├── components                   # Directory for reusable React components
+│   │   │   ├── Cards                    # Components related to displaying card elements
+│   │   │   │   ├── ProductCard.tsx      # Component for displaying individual product cards
+│   │   │   │   ├── ProductGrid.tsx      # Component to render a grid layout of products
+│   │   │   │   └── SampleCards.tsx      # Sample card components for demonstration or testing
+│   │   │   ├── Navbar                   # Directory for navigation bar component
+│   │   │   │   └── Navbar.tsx           # Navigation bar component at the top of the page
+│   │   │   └── pages                    # Directory for page-level components
+│   │   │       └── Home.tsx             # Main homepage component for the application
+│   │   ├── index.css                    # Main CSS file for global styling
+│   │   ├── lib                          # Directory for utility libraries
+│   │   │   └── AxiosAdmin.ts            # Axios instance for API requests with admin configurations
+│   │   ├── main.tsx                     # Main entry file rendering the React application
+│   │   ├── types                        # Directory for TypeScript types
+│   │   │   └── index.ts                 # TypeScript types for type-checking throughout the project
+│   │   └── vite-env.d.ts                # TypeScript environment declarations for Vite
+│   ├── tailwind.config.js               # Tailwind CSS configuration for customizing styles
+│   └── vite.config.ts                   # Vite configuration for bundling the client application
+├── compose.yaml                         # Docker Compose configuration for orchestrating services
+├── README.md                            # Documentation and setup instructions for the project
+└── server                               # Backend application directory
+    ├── Dockerfile                       # Instructions for building the server-side Docker image
+    └── src                              # Source code directory for the backend
+        ├── config                       # Configuration directory
+        │   └── db.ts                    # Database connection configuration
+        ├── controllers                  # Directory for request handler functions
+        │   ├── MaterialController.ts    # Logic for handling material-related API requests
+        │   ├── SKUController.ts         # Logic for handling SKU-related API requests
+        │   └── TypeController.ts        # Logic for handling type-related API requests
+        ├── index.ts                     # Main file to initialize and configure the server
+        ├── middleware                   # Directory for middleware functions
+        │   └── index.ts                 # Middleware functions for request handling and processing
+        ├── models                       # Directory for data models
+        │   ├── Material.model.ts        # Data model for materials in the database
+        │   ├── Product.models.ts        # Data model for products in the database
+        │   └── Type.models.ts           # Data model for types in the database
+        ├── routes                       # Directory for route definitions
+        │   ├── Router.Material.ts       # Routes for handling material-related endpoints
+        │   ├── Router.SKU.ts            # Routes for handling SKU-related endpoints
+        │   └── Router.Type.ts           # Routes for handling type-related endpoints
+        └── server.ts                    # Server setup and configuration, starts the application
+
 
 ```
 

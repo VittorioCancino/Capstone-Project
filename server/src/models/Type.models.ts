@@ -1,8 +1,10 @@
-import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, HasMany } from "sequelize-typescript"
+import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, HasMany, CreatedAt } from "sequelize-typescript"
 import Product from "./Product.models";
 
 @Table({
     tableName: "Type",
+    createdAt: false,
+    updatedAt: false
 })
 
 class Type extends Model {
@@ -14,8 +16,6 @@ class Type extends Model {
         type: DataType.INTEGER
     })
     declare Id: number;
-
-
 
     // Name of the Type
     @Column({
