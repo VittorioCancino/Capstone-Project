@@ -29,8 +29,7 @@ The <code>.env</code> file in the server directory will contain backend-specific
 │       ├── index.css
 │       ├── lib
 │       ├── main.tsx
-│       ├── types
-│       └── vite-env.d.ts
+│       └── types
 ├── compose.yaml
 ├── README.md
 ├── .env        # .env file for Docker Compose
