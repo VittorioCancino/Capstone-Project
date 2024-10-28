@@ -1,6 +1,6 @@
 # Capstone-Project
 <p align="justify">
-    Official GitHub repository for the access control application implemented in the IT laboratory at Adolfo Ibáñez University. The development of this project uses <a href="https://www.typescriptlang.org/">TypeScript</a> as the main programming language. The frontend is implemented with <a href="https://react.dev/">React</a>, while the backend of the application is built using <a href="https://expressjs.com/">Express.js</a>, all running in the <a href="https://nodejs.org/">Node.js</a> environment. Additionally, the database used for the application is built with <a href="https://www.postgresql.org/">PostgreSQL</a>.
+    Official GitHub repository for the inventory management application developed for Industria Convertidora S.A., designed to tackle and optimize inventory issues within the organization. The development of this project uses <a href="https://www.typescriptlang.org/">TypeScript</a> as the main programming language. The frontend is implemented with <a href="https://react.dev/">React</a>, while the backend of the application is built using <a href="https://expressjs.com/">Express.js</a>, all running in the <a href="https://nodejs.org/">Node.js</a> environment. Additionally, the database used for the application is built with <a href="https://www.postgresql.org/">PostgreSQL</a>.
 </p>
 
 # Configuration and Deployment
