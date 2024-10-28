@@ -21,12 +21,15 @@ The <code>.env</code> file in the server directory will contain backend-specific
 ├── client
 │   ├── Dockerfile
 │   ├── index.html
+│   ├── public
 │   └── src
+│       ├── api
 │       ├── App.tsx
 │       ├── components
-│       │   └── pages
 │       ├── index.css
-│       └── main.tsx
+│       ├── lib
+│       ├── main.tsx
+│       └── types
 ├── compose.yaml
 ├── README.md
 ├── .env        # .env file for Docker Compose
@@ -35,10 +38,12 @@ The <code>.env</code> file in the server directory will contain backend-specific
     ├── .env    # .env file for the server
     └── src
         ├── config
-        │   └── db.ts
+        ├── controllers
         ├── index.ts
+        ├── middleware
+        ├── models
+        ├── routes
         └── server.ts
-
 ```
 
 #### 1. **Server `.env` file** (located in the `server` directory) 
