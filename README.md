@@ -117,9 +117,8 @@ docker compose up
 │       ├── lib
 │       │   └── AxiosAdmin.ts
 │       ├── main.tsx
-│       ├── types
-│       │   └── index.ts
-│       └── vite-env.d.ts
+│       └── types
+│           └── index.ts
 ├── compose.yaml
 ├── README.md
 └── server
@@ -143,7 +142,6 @@ docker compose up
         │   ├── Router.SKU.ts
         │   └── Router.Type.ts
         └── server.ts
-
 ```
 # Project Structure (Definition) (Update Needed)
 ```
