@@ -7,3 +7,6 @@ z.object({
 
 export const CreateTypeSchema = InitialSchema;
 export type CreateType = z.infer<typeof CreateTypeSchema>;
+
+export const CreateMaterialSchema = InitialSchema;
+export type CreateMaterial = z.infer<typeof CreateMaterialSchema>;
