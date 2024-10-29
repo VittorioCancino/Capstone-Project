@@ -2,7 +2,7 @@ import API_SKU from "../lib/AxiosSKU";
 import { isAxiosError } from "axios";
 import { CreateType } from "../types";
 
-export async function CreateSKU(formdata: CreateType) {
+export async function CreateSKUs(formdata: CreateType) {
 	try {
 		const url = "/create-sku";
 		const { data } = await API_SKU.post(url, formdata);
