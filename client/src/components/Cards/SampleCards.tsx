@@ -1,283 +1,70 @@
 import React from "react";
-import ProductGrid from "./ProductGrid";
+import ProductList from "./ProductList";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useQuery } from "react-query";
+import { GetAllProducts } from "../../api/ProductApi";
+import { string } from "zod";
 
+interface Product {
+  Id: number;
+  Material: number;
+  Type: number;
+  Large: number;
+  Width: number;
+  Thickness: number;
+  Quantity: number;
+  MaterialInfoId: number; // Cambiado de 'MaterialInfo.Id'
+  MaterialInfoName: string; // Cambiado de 'MaterialInfo.Name'
+  TypeInfoId: number; // Cambiado de 'TypeInfo.Id'
+  TypeInfoName: string; // Cambiado de 'TypeInfo.Name'
+}
 const SampleCards = ({ filter }) => {
-  const productList = [
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
+  const [products, setProducts] = useState<Product[]>([]);
 
+  const { data, error, isError, isLoading } = useQuery(
+    "products",
+    GetAllProducts,
     {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
+      onSuccess: (data) => {
+        const mappedProducts = data.data.map((item) => ({
+          Id: item.Id,
+          Material: item.Material,
+          Type: item.Type,
+          Large: item.Large,
+          Width: item.Width,
+          Thickness: item.Thickness,
+          Quantity: item.Quantity,
+          MaterialInfoId: item["MaterialInfo.Id"], // Usando el campo correcto
+          MaterialInfoName: item["MaterialInfo.Name"], // Usando el campo correcto
+          TypeInfoId: item["TypeInfo.Id"], // Usando el campo correcto
+          TypeInfoName: item["TypeInfo.Name"], // Usando el campo correcto
+        }));
+        setProducts(mappedProducts);
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
+      },
+    }
+  );
 
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "Tela",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "Piedra",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "Rocas",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-    {
-      Id: 1,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "Bolsa",
-      Available: 20,
-      Inventory: 100,
-      MinStock: 10,
-      LastRestock: "2024-10-01",
-    },
-
-    {
-      Id: 2,
-      Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "Bobina",
-      Available: 15,
-      Inventory: 80,
-      MinStock: 5,
-      LastRestock: "2024-09-15",
-    },
-  ];
+  // Log para ver el filter y los nombres que se comparan
+  console.log("Filter:", filter);
+  console.log(
+    "Product Names:",
+    products.map((product) => product.MaterialInfoName)
+  );
 
   const filteredProducts = filter
-    ? productList.filter((product) => product.Title === filter)
-    : productList;
+    ? products.filter((product) => product.MaterialInfoName === filter)
+    : products;
 
   return (
     <div>
-      <ProductGrid products={filteredProducts} />
+      <ProductList products={filteredProducts} />
     </div>
   );
 };

@@ -6,7 +6,7 @@ export async function CreateTypes(formdata: CreateType) {
 	try {
 		const url = "/create-type";
 		const { data } = await API_TYPE.post(url, formdata);
-		console.log("Response from API Type:", data);
+		//console.log("Response from API Type:", data);
 		return data;
 	} catch (error) {
 		if (isAxiosError(error) && error.message) {
@@ -19,7 +19,7 @@ export async function RemoveTypes(formdata: CreateType) {
 	try {
 		const url = "/Remove-type";
 		const { data } = await API_TYPE.post(url, formdata);
-		console.log("Response from API Type:", data);
+		//console.log("Response from API Type:", data);
 		return data;
 	} catch (error) {
 		if (isAxiosError(error) && error.message) {
@@ -32,7 +32,7 @@ export async function GetAllTypes() {
 	try {
 		const url = "/get-all-types";
 		const { data } = await API_TYPE.get(url);
-		console.log("Response from API Types:", data);
+		//console.log("Response from API Types:", data);
 		return data;
 	} catch (error) {
 		if (isAxiosError(error) && error.message) {

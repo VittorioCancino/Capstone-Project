@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { CreateType, CreateMaterial } from "../../types";
 import { CreateTypes, RemoveTypes } from "../../api/TypeApi";
-import { CreateSKUs } from "../../api/SKUApi";
+import { CreateProducts } from "../../api/ProductApi";
 import { CreateMaterials, RemoveMaterials } from "../../api/MaterialApi";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
@@ -101,7 +101,7 @@ export default function Navbar({ setFilter }) {
     mutateTypeR(formData);
   };
 
-  const { mutate: mutateSKU } = useMutation(CreateSKUs, {
+  const { mutate: mutateSKU } = useMutation(CreateProducts, {
     onError: (error: Error) => {
       toast.error(error.message);
     },
