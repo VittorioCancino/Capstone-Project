@@ -10,7 +10,11 @@ interface Material {
   Name: string;
 }
 
-const AllMateriales = () => {
+interface AllMaterialsProps {
+  filter: (filterValue: string) => void;
+}
+
+const AllMateriales: React.FC<AllMaterialsProps> = ({ filter }) => {
   const [materials, setMaterials] = useState<Material[]>([]);
 
   const { data, error, isError, isLoading } = useQuery(
@@ -39,6 +43,7 @@ const AllMateriales = () => {
           <li
             key={material.Id}
             className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            onClick={() => filter(material.Name)}
           >
             {material.Name}
           </li>

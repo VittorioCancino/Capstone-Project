@@ -215,7 +215,7 @@ const SampleCards = ({ filter }) => {
     {
       Id: 1,
       Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
+      Title: "Tela",
       Available: 20,
       Inventory: 100,
       MinStock: 10,
@@ -225,7 +225,7 @@ const SampleCards = ({ filter }) => {
     {
       Id: 2,
       Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
+      Title: "Piedra",
       Available: 15,
       Inventory: 80,
       MinStock: 5,
@@ -244,7 +244,7 @@ const SampleCards = ({ filter }) => {
     {
       Id: 2,
       Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
+      Title: "Rocas",
       Available: 15,
       Inventory: 80,
       MinStock: 5,
@@ -253,7 +253,7 @@ const SampleCards = ({ filter }) => {
     {
       Id: 1,
       Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSA15x30cm35mc",
+      Title: "Bolsa",
       Available: 20,
       Inventory: 100,
       MinStock: 10,
@@ -263,7 +263,7 @@ const SampleCards = ({ filter }) => {
     {
       Id: 2,
       Image: "/bolsa-de-plastico-en-caida-libre.jpeg",
-      Title: "PPNBOLSAVACIO30X30cm80mc",
+      Title: "Bobina",
       Available: 15,
       Inventory: 80,
       MinStock: 5,
@@ -272,7 +272,7 @@ const SampleCards = ({ filter }) => {
   ];
 
   const filteredProducts = filter
-    ? productList.filter((product) => product.Id === 2)
+    ? productList.filter((product) => product.Title === filter)
     : productList;
 
   return (

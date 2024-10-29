@@ -10,12 +10,16 @@ interface Type {
   Name: string;
 }
 
-const AllMateriales = () => {
-  const [materials, setMaterials] = useState<Type[]>([]);
+interface AllTypesProps {
+  filter: (filterValue: string) => void;
+}
+
+const AllTypes: React.FC<AllTypesProps> = ({ filter }) => {
+  const [types, setTypes] = useState<Type[]>([]);
 
   const { data, error, isError, isLoading } = useQuery("types", GetAllTypes, {
     onSuccess: (data) => {
-      setMaterials(data.data);
+      setTypes(data.data);
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -28,15 +32,16 @@ const AllMateriales = () => {
   return (
     <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
       <h4 className="font-semibold text-gray-700 underline mb-2">
-        Tipo de Material
+        Tipo de producto
       </h4>
       <ul className="space-y-1 text-left w-full">
-        {materials.map((material) => (
+        {types.map((type) => (
           <li
-            key={material.Id}
+            key={type.Id}
             className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+            onClick={() => filter(type.Name)}
           >
-            {material.Name}
+            {type.Name}
           </li>
         ))}
       </ul>
@@ -44,4 +49,4 @@ const AllMateriales = () => {
   );
 };
 
-export default AllMateriales;
+export default AllTypes;

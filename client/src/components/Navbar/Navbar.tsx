@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { ToastContainer, toast } from "react-toastify";
 import AllMateriales from "./AllMateriales";
+import AllTypes from "./AllTypes";
 
 export default function Navbar({ setFilter }) {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -57,7 +58,6 @@ export default function Navbar({ setFilter }) {
   const initialValuesMaterial: CreateMaterial = {
     Name: "",
   };
-  
 
   const {
     register: registerType,
@@ -73,8 +73,6 @@ export default function Navbar({ setFilter }) {
     reset: resetMaterial,
   } = useForm<CreateMaterial>({ defaultValues: initialValuesMaterial });
 
-
-  // Define useMutation hooks for each creation function
   const { mutate: mutateType } = useMutation(CreateTypes, {
     onError: (error: Error) => {
       toast.error(error.message);
@@ -104,7 +102,9 @@ export default function Navbar({ setFilter }) {
   };
 
   const { mutate: mutateSKU } = useMutation(CreateSKUs, {
-    onError: (error: Error) => {toast.error(error.message);},
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
     onSuccess: () => {
       toast.success("Producto creado exitosamente");
       resetType();
@@ -116,7 +116,9 @@ export default function Navbar({ setFilter }) {
   };
 
   const { mutate: mutateMaterial } = useMutation(CreateMaterials, {
-    onError: (error: Error) => {toast.error(error.message);},
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
     onSuccess: () => {
       toast.success("Material de Producto creado exitosamente");
       resetMaterial();
@@ -124,7 +126,9 @@ export default function Navbar({ setFilter }) {
   });
 
   const { mutate: mutateMaterialR } = useMutation(RemoveMaterials, {
-    onError: (error: Error) => {toast.error(error.message);},
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
     onSuccess: () => {
       toast.success("Material de Producto eliminado exitosamente");
       resetMaterial();
@@ -195,7 +199,11 @@ export default function Navbar({ setFilter }) {
         <nav className="flex items-center justify-between px-10 py-6">
           <div className="absolute left-0 px-4">
             <a href="/">
-              <img src="/bolsa-de-plastico-en-caida-libre.jpeg" alt="Logo" className="h-20 w-auto" />{" "}
+              <img
+                src="/bolsa-de-plastico-en-caida-libre.jpeg"
+                alt="Logo"
+                className="h-20 w-auto"
+              />{" "}
             </a>
           </div>
 
@@ -218,39 +226,13 @@ export default function Navbar({ setFilter }) {
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-auto bg-white border border-gray-200 rounded-xl shadow-lg p-4">
                 <div className="flex justify-between space-x-16">
-                  <AllMateriales />
+                  <AllMateriales filter={handleFilterClick} />
+                  <AllTypes filter={handleFilterClick} />
                   <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
-                    <h4 className="font-semibold text-gray-700 underline mb-2">
-                      Tipo de Producto
-                    </h4>
-                    <ul className="space-y-1 text-left w-full">
-                      <li className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-                        Bolsa
-                      </li>
-                      <li
-                        className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                        onClick={() => handleFilterClick("Bobina")}
-                      >
-                        Bobina
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
-                    <h4 className="font-semibold text-gray-700 underline mb-2">
-                      Dimensiones
-                    </h4>
-                    <ul className="space-y-1 text-left w-full">
-                      <li className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-                        30x30x80
-                      </li>
-                      <li className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-                        40x40x100
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
-                    <h4 className="font-semibold text-gray-700 underline mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                    onClick={() => handleFilterClick("")}>
+                    <h4
+                      className="font-semibold text-gray-700 underline mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                      onClick={() => handleFilterClick("")}
+                    >
                       Limpiar Filtro
                     </h4>
                   </div>
@@ -259,13 +241,19 @@ export default function Navbar({ setFilter }) {
             )}
           </div>
           <button
-            onClick={() => {openModal(); handleAddOrDelete("Agregar")}}
+            onClick={() => {
+              openModal();
+              handleAddOrDelete("Agregar");
+            }}
             className="ml-4 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
           >
             Agregar
           </button>
           <button
-            onClick={() => {openModal(); handleAddOrDelete("Eliminar")}}
+            onClick={() => {
+              openModal();
+              handleAddOrDelete("Eliminar");
+            }}
             className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
           >
             Eliminar
@@ -315,11 +303,15 @@ export default function Navbar({ setFilter }) {
                 Cancelar
               </button>
               <button
-                onClick={addOrDelete === "Agregar" ? handleAddSubmit : handleDeleteSubmit}
+                onClick={
+                  addOrDelete === "Agregar"
+                    ? handleAddSubmit
+                    : handleDeleteSubmit
+                }
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 {addOrDelete === "Agregar" ? "Agregar" : "Eliminar"}
-              </button>              
+              </button>
             </div>
           </div>
         </div>
