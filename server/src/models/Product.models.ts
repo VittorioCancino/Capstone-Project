@@ -4,6 +4,8 @@ import Material from "./Material.model";
 
 @Table({
     tableName: "Product",
+    createdAt: false,
+    updatedAt: false
 })
 
 class Product extends Model {
@@ -23,7 +25,7 @@ class Product extends Model {
     })
     declare Material: number;
     @BelongsTo(() => Material)
-    declare MaterialFK: Material;
+    declare MaterialInfo: Material;
 
     // Type of the Product
     @ForeignKey(() => Type)
@@ -32,7 +34,7 @@ class Product extends Model {
     })
     declare Type: number;
     @BelongsTo(() => Type)
-    declare TypeFK: Type;
+    declare TypeInfo: Type;
 
     // Large of the Product
     @Column({
@@ -51,6 +53,12 @@ class Product extends Model {
         type: DataType.INTEGER
     })
     declare Thickness: number;
+
+    // Thickness of the Product
+    @Column({
+        type: DataType.INTEGER
+    })
+    declare Quantity: number;
 }
 
 export default Product

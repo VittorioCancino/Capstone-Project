@@ -1,6 +1,6 @@
 import express from "express";
 import db from "./config/db";
-import RouterSKU from "./routes/Router.SKU";
+import RouterProduct from "./routes/Router.Product";
 import RouterType from "./routes/Router.Type";
 import RouterMaterial from "./routes/Router.Material";
 
@@ -24,7 +24,7 @@ server.use(cors());
 server.use(express.json());
 
 // Define API Routes
-server.use("/API/SKU", RouterSKU)
+server.use("/API/SKU", RouterProduct)
 server.use("/API/Type", RouterType)
 server.use("/API/Material", RouterMaterial)
 export default server;

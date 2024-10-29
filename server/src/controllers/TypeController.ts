@@ -16,7 +16,7 @@ export class TypeController {
     static CreateType = async (req: Request, res: Response) => {
         try {
             // Structure the Request Schema
-            const Body: RequestSchema = req.body;
+            const Request: RequestSchema = req.body;
 
             // Find all Types
             const TypeList: TypeSchema[] = await Type.findAll({
@@ -25,7 +25,7 @@ export class TypeController {
             });
 
             // See if the Requested Type alredy Exists
-            const TypeExists = TypeList.some(type => type.Name.toLocaleLowerCase() === Body.Name.toLocaleLowerCase())
+            const TypeExists = TypeList.some(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
             if (TypeExists) {
                 res.status(400).send({ error: "Type Alredy Exists" })
                 return
@@ -33,7 +33,7 @@ export class TypeController {
 
             // Create and save the new Type
             const newType = new Type();
-            newType.Name = Body.Name
+            newType.Name = Request.Name
             await Promise.allSettled([newType.save()])
             res.status(200).send({ message: "Type Successfully Created" })
 
@@ -46,7 +46,7 @@ export class TypeController {
     static RemoveType = async (req: Request, res: Response) => {
         try {
             // Structure the Request Schema
-            const Body: RequestSchema = req.body
+            const Request: RequestSchema = req.body
 
             // Find all Types
             const TypeList: TypeSchema[] = await Type.findAll({
@@ -55,14 +55,14 @@ export class TypeController {
             });
 
             // See if the Requested Type alredy Exists
-            const TypeExists = TypeList.some(type => type.Name.toLocaleLowerCase() === Body.Name.toLocaleLowerCase())
+            const TypeExists = TypeList.some(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
             if (!TypeExists) {
                 res.status(400).send({ error: "Type Does Not Exists" })
                 return
             }
 
             // Structure the found Type
-            const RemoveType = TypeList.find(type => type.Name.toLocaleLowerCase() === Body.Name.toLocaleLowerCase())
+            const RemoveType = TypeList.find(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
             await Promise.allSettled([Type.destroy({ where: { Id: RemoveType.Id } })])
             res.status(200).send({ message: "Type Successfully Removed" })
 
