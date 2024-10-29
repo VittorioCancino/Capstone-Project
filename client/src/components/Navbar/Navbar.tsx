@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { CreateType, CreateMaterial } from "../../types";
+import { CreateType, CreateMaterial, CreateProduct } from "../../types";
 import { CreateTypes, RemoveTypes } from "../../api/TypeApi";
-import { CreateProducts } from "../../api/ProductApi";
+import { CreateProducts, RemoveProducts } from "../../api/ProductApi";
 import { CreateMaterials, RemoveMaterials } from "../../api/MaterialApi";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
@@ -19,6 +19,12 @@ export default function Navbar({ setFilter }) {
   const [addOption, setAddOption] = useState("");
   const [productName, setProductName] = useState("");
   const [addOrDelete, setAddOrDelete] = useState("");
+  const [productData, setProductData] = useState<CreateProduct | null>(null);
+  const [material, setMaterial] = useState(productData?.Material || "");
+  const [type, setType] = useState(productData?.Type || "");
+  const [large, setLarge] = useState(productData?.Large || "");
+  const [width, setWidth] = useState(productData?.Width || "");
+  const [thickness, setThickness] = useState(productData?.Thickness || "");
 
   useEffect(() => {
     if (location.pathname === "/") {
@@ -59,6 +65,14 @@ export default function Navbar({ setFilter }) {
     Name: "",
   };
 
+  const initialValuesProduct: CreateProduct = {
+    Material: "",
+    Type: "",
+    Large: 1,
+    Width: 1,
+    Thickness: 1,
+  };
+
   const {
     register: registerType,
     formState: { errors: errorsType },
@@ -72,6 +86,13 @@ export default function Navbar({ setFilter }) {
     handleSubmit: handleSubmitMaterial,
     reset: resetMaterial,
   } = useForm<CreateMaterial>({ defaultValues: initialValuesMaterial });
+
+  const {
+    register: registerProduct,
+    formState: { errors: errorsProduct },
+    handleSubmit: handleSubmitProduct,
+    reset: resetProduct,
+  } = useForm<CreateProduct>({ defaultValues: initialValuesProduct });
 
   const { mutate: mutateType } = useMutation(CreateTypes, {
     onError: (error: Error) => {
@@ -101,7 +122,7 @@ export default function Navbar({ setFilter }) {
     mutateTypeR(formData);
   };
 
-  const { mutate: mutateSKU } = useMutation(CreateProducts, {
+  const { mutate: mutateProduct } = useMutation(CreateProducts, {
     onError: (error: Error) => {
       toast.error(error.message);
     },
@@ -111,8 +132,22 @@ export default function Navbar({ setFilter }) {
     },
   });
 
-  const HandleCreateSKU = (formData: CreateType) => {
-    mutateSKU(formData);
+  const { mutate: mutateProductR } = useMutation(RemoveProducts, {
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Producto creado exitosamente");
+      resetType();
+    },
+  });
+
+  const HandleCreateProduct = (formData: CreateProduct) => {
+    mutateProduct(formData);
+  };
+
+  const HandleRemoveProduct = (formData: CreateProduct) => {
+    mutateProductR(formData);
   };
 
   const { mutate: mutateMaterial } = useMutation(CreateMaterials, {
@@ -144,20 +179,47 @@ export default function Navbar({ setFilter }) {
   };
 
   const openModal = () => setShowModal(true);
+
   const closeModal = () => {
     setShowModal(false);
     setAddOption("");
     setProductName("");
   };
+
+  const closeProductModal = () => {
+    setShowModal(false);
+    setAddOption("");
+    setProductName("");
+    setMaterial("");
+    setType("");
+    setLarge("");
+    setWidth("");
+    setThickness("");
+  };
+
   const handleAddOptionChange = (event) => setAddOption(event.target.value);
   const handleNameChange = (event) => setProductName(event.target.value);
+  const handleDataChange = (event) => setProductData(event.target.value);
+  const handleMaterialChange = (e) => setMaterial(e.target.value);
+  const handleTypeChange = (e) => setType(e.target.value);
+  const handleLargeChange = (e) => setLarge(e.target.value);
+  const handleWidthChange = (e) => setWidth(e.target.value);
+  const handleThicknessChange = (e) => setThickness(e.target.value);
 
   const handleAddSubmit = () => {
     console.log(`Agregar ${addOption} con nombre: ${productName}`);
 
     if (addOption === "Producto") {
-      const formData: CreateType = { Name: productName };
-      HandleCreateSKU(formData);
+      const formData: CreateProduct = {
+        Material: material,
+        Type: type,
+        Large: Number(large),
+        Width: Number(width),
+        Thickness: Number(thickness),
+      };
+      HandleCreateProduct(formData);
+      queryClient.invalidateQueries("products");
+      closeProductModal();
     } else if (addOption === "Tipo de Producto") {
       const formData: CreateType = { Name: productName };
       HandleCreateType(formData);
@@ -174,8 +236,16 @@ export default function Navbar({ setFilter }) {
     console.log(`Borrar ${addOption} con nombre: ${productName}`);
 
     if (addOption === "Producto") {
-      const formData: CreateType = { Name: productName };
-      HandleCreateSKU(formData);
+      const formData: CreateProduct = {
+        Material: material,
+        Type: type,
+        Large: Number(large),
+        Width: Number(width),
+        Thickness: Number(thickness),
+      };
+      HandleRemoveProduct(formData);
+      queryClient.invalidateQueries("products");
+      closeProductModal();
     } else if (addOption === "Tipo de Producto") {
       const formData: CreateType = { Name: productName };
       HandleRemoveType(formData);
@@ -282,7 +352,7 @@ export default function Navbar({ setFilter }) {
               </select>
             </label>
 
-            {addOption && (
+            {addOption !== "Producto" ? (
               <label className="block mb-4">
                 <span className="text-gray-700">Nombre:</span>
                 <input
@@ -293,6 +363,64 @@ export default function Navbar({ setFilter }) {
                   className="block w-full mt-1 p-2 border border-gray-300 rounded"
                 />
               </label>
+            ) : (
+              <form onSubmit={handleAddSubmit} className="space-y-4">
+                <label className="block mb-4">
+                  <span className="text-gray-700">Material:</span>
+                  <input
+                    type="text"
+                    value={material}
+                    onChange={handleMaterialChange}
+                    placeholder="Ingrese el material"
+                    className="block w-full mt-1 p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </label>
+                <label className="block mb-4">
+                  <span className="text-gray-700">Tipo:</span>
+                  <input
+                    type="text"
+                    value={type}
+                    onChange={handleTypeChange}
+                    placeholder="Ingrese el tipo"
+                    className="block w-full mt-1 p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </label>
+                <label className="block mb-4">
+                  <span className="text-gray-700">Largo:</span>
+                  <input
+                    type="number"
+                    value={large}
+                    onChange={handleLargeChange}
+                    placeholder="Ingrese el largo"
+                    className="block w-full mt-1 p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </label>
+                <label className="block mb-4">
+                  <span className="text-gray-700">Ancho:</span>
+                  <input
+                    type="number"
+                    value={width}
+                    onChange={handleWidthChange}
+                    placeholder="Ingrese el ancho"
+                    className="block w-full mt-1 p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </label>
+                <label className="block mb-4">
+                  <span className="text-gray-700">Grosor:</span>
+                  <input
+                    type="number"
+                    value={thickness}
+                    onChange={handleThicknessChange}
+                    placeholder="Ingrese el grosor"
+                    className="block w-full mt-1 p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </label>
+              </form>
             )}
 
             <div className="flex justify-end space-x-4">
