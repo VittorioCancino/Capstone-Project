@@ -24,7 +24,7 @@ server.use(cors());
 server.use(express.json());
 
 // Define API Routes
-server.use("/API/SKU", RouterProduct)
+server.use("/API/Product", RouterProduct)
 server.use("/API/Type", RouterType)
 server.use("/API/Material", RouterMaterial)
 export default server;
