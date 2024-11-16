@@ -2,9 +2,7 @@ import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, HasMany, Cre
 import Product from "./Product.models";
 
 @Table({
-    tableName: "Type",
-    createdAt: false,
-    updatedAt: false
+    tableName: "Type"
 })
 
 class Type extends Model {

@@ -9,6 +9,8 @@ console.log(result)
 const db = new Sequelize(process.env.DATABASE_URL!, {
 	models: [__dirname + "/../models/**.*.ts"],
 	logging: false,
+	dialect: "postgres",
+	schema: "bd_inventario",
 });
 
 export default db;

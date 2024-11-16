@@ -3,9 +3,7 @@ import Type from "./Type.models"
 import Material from "./Material.model";
 
 @Table({
-    tableName: "Product",
-    createdAt: false,
-    updatedAt: false
+    tableName: "Product"
 })
 
 class Product extends Model {
