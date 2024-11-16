@@ -1,13 +1,12 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, HasMany, CreatedAt } from "sequelize-typescript"
-import Product from "./Product.models";
 
 @Table({
-    tableName: "Type"
+    tableName: "Group"
 })
 
-class Type extends Model {
+class Group extends Model {
     // TODO Add Nature of the variables
-    // Id of the Type
+    // Id of the Group
     @PrimaryKey
     @AutoIncrement
     @Column({
@@ -15,7 +14,7 @@ class Type extends Model {
     })
     declare Id: number;
 
-    // Name of the Type
+    // Name of the Group
     @Column({
         type: DataType.STRING
     })
@@ -23,4 +22,4 @@ class Type extends Model {
 
 }
 
-export default Type
+export default Group

@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import db from "./config/db";
 import RouterProduct from "./routes/Router.Product";
-import RouterType from "./routes/Router.Type";
+import RouterGroup from "./routes/Router.Group";
 import RouterMaterial from "./routes/Router.Material";
 
 // Define Conection to the Data Base
@@ -25,6 +25,6 @@ server.use(express.json());
 
 // Define API Routes
 server.use("/API/Product", RouterProduct)
-server.use("/API/Type", RouterType)
+server.use("/API/Type", RouterGroup)
 server.use("/API/Material", RouterMaterial)
 export default server;

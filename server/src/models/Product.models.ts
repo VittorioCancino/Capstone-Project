@@ -1,5 +1,5 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, ForeignKey, BelongsTo } from "sequelize-typescript"
-import Type from "./Type.models"
+import Type from "./Group.models"
 import Material from "./Material.model";
 
 @Table({

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import Product from "../models/Product.models";
 import Material from "../models/Material.model";
-import Type from "../models/Type.models";
+import Type from "../models/Group.models";
 
 interface ProductSchema {
     Id: number
