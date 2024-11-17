@@ -1,13 +1,27 @@
 import type { Request, Response } from "express";
 import Material from "../models/Material.model";
 
+// INTERFACES
+// Material Structure
 interface MaterialSchema {
     Id: number
     Name: string
 }
 
+// Request Structure
 interface RequestSchema {
-    Name: string
+    MaterialName: string
+}
+
+//FUNCTIONS
+// CheckMaterial: Check if a Material exist in a MaterialList
+export function CheckMaterial(Material: String, MaterialList: MaterialSchema[]) {
+    return MaterialList.some(material => material.Name.toLocaleLowerCase() === Material.toLocaleLowerCase())
+}
+
+// FindMaterial: Fin a Material inside a MaterialList
+export function FindMaterial(Material: String, MaterialList: MaterialSchema[]) {
+    return MaterialList.find(material => material.Name.toLocaleLowerCase() === Material.toLocaleLowerCase())
 }
 
 export class MaterialController {
@@ -25,7 +39,7 @@ export class MaterialController {
             });
 
             // See if the Requested Material alredy Exists
-            const MaterialExists = MaterialList.some(material => material.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const MaterialExists = CheckMaterial(Request.MaterialName, MaterialList)
             if (MaterialExists) {
                 res.status(400).send({ error: "Material Alredy Exists" })
                 return
@@ -33,7 +47,7 @@ export class MaterialController {
 
             // Create and save the new Material
             const newMaterial = new Material();
-            newMaterial.Name = Request.Name
+            newMaterial.Name = Request.MaterialName
             await Promise.allSettled([newMaterial.save()])
             res.status(200).send({ message: "Material Successfully Created" })
         } catch (error) {
@@ -53,14 +67,14 @@ export class MaterialController {
             });
 
             // See if the Requested Material alredy Exists
-            const MaterialExists = MaterialList.some(material => material.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const MaterialExists = CheckMaterial(Request.MaterialName, MaterialList)
             if (!MaterialExists) {
                 res.status(400).send({ error: "Material Does Not Exists" })
                 return
             }
 
             // Structure the found Material
-            const RemoveType = MaterialList.find(material => material.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const RemoveType = FindMaterial(Request.MaterialName, MaterialList)
             await Promise.allSettled([Material.destroy({ where: { Id: RemoveType.Id } })])
             res.status(200).send({ message: "Material Successfully Removed" })
         } catch (error) {

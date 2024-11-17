@@ -1,14 +1,12 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, ForeignKey, BelongsTo } from "sequelize-typescript"
-import Bodega from "./Bodega.model";
+import Warehouse from "./Warehouse.model";
 
 @Table({
     tableName: "Area",
 })
 
 class Area extends Model {
-
-    // TODO Add Nature of the variables
-    // Id of the Material
+    // Id of the Area
     @PrimaryKey
     @AutoIncrement
     @Column({
@@ -16,16 +14,16 @@ class Area extends Model {
     })
     declare Id: number;
 
-    // Material of the Product
-    @ForeignKey(() => Bodega)
+    // Id of the Warehouse where the Area is located
+    @ForeignKey(() => Warehouse)
     @Column({
         type: DataType.INTEGER
     })
-    declare Bodega: number;
-    @BelongsTo(() => Bodega)
-    declare BodegaId: Bodega;
+    declare Warehouse: number;
+    @BelongsTo(() => Warehouse)
+    declare WarehouseId: Warehouse;
 
-    // Name of the Area
+    // Name of the Aree
     @Column({
         type: DataType.STRING
     })
