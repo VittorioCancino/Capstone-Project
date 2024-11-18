@@ -19,15 +19,15 @@ class Stock extends Model {
     @Column({
         type: DataType.INTEGER
     })
-    declare ProductArea: number;
+    declare ProductAreaId: number;
     @BelongsTo(() => ProductArea)
-    declare DisposicionId: ProductArea;
+    declare StockId: ProductArea;
 
     // Quantity of the stock
     @Column({
         type: DataType.INTEGER
     })
-    declare Cantidad: string;
+    declare Quantity: number;
 
 }
 

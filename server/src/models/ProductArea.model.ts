@@ -19,7 +19,7 @@ class ProductArea extends Model {
     @Column({
         type: DataType.INTEGER,
     })
-    declare ProductoId: number;
+    declare ProductId: number;
 
     // Id of the Area where the Product is located
     @ForeignKey(() => Area)
@@ -33,7 +33,7 @@ class ProductArea extends Model {
     @Column({
         type: DataType.STRING,
     })
-    declare UID: number;
+    declare UID: string;
 
     // Relationships
     @BelongsTo(() => Product)

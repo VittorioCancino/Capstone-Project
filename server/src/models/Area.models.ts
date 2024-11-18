@@ -19,9 +19,9 @@ class Area extends Model {
     @Column({
         type: DataType.INTEGER
     })
-    declare Warehouse: number;
+    declare WarehouseId: number;
     @BelongsTo(() => Warehouse)
-    declare WarehouseId: Warehouse;
+    declare WarehouseInfo: Warehouse;
 
     // Name of the Aree
     @Column({

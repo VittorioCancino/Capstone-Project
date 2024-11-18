@@ -6,15 +6,17 @@ import Group from "../models/Group.models";
 // EXTERNAL FUNCTIONS
 // Materials Functions
 import { CheckMaterial } from "./MaterialController";
+import { FindMaterial } from "./MaterialController";
 
 // Group Functions
 import { CheckGroup } from "./GroupController";
+import { FindGroup } from "./GroupController";
 
 // INTERFACES
-interface ProductSchema {
+export interface ProductSchema {
     Id: number
-    Material: number
-    Group: number
+    MaterialId: number
+    GroupId: number
     Large: number
     Width: number
     Thickness: number
@@ -31,7 +33,6 @@ interface CreateProductSchema {
 }
 
 interface RemoveProductSchema extends CreateProductSchema {
-
 }
 
 interface AddStockToProductSchema extends CreateProductSchema {
@@ -43,7 +44,7 @@ interface RemoveStockFromProductSchema extends AddStockToProductSchema {
 
 // FUNCTIONS
 // FindProduct: Find a Product in a ProductList
-function FindProduct(MaterialName: String, GroupName: String, ProductLarge: Number, ProductWidth: Number, ProductThickness: Number, ProductList: ProductSchema[]) {
+export function FindProduct(MaterialName: String, GroupName: String, ProductLarge: Number, ProductWidth: Number, ProductThickness: Number, ProductList: ProductSchema[]) {
     return ProductList.find((product) =>
         product["MaterialInfo.Name"].toLocaleLowerCase() == MaterialName.toLocaleLowerCase() &&
         product["GroupInfo.Name"].toLocaleLowerCase() == GroupName.toLocaleLowerCase() &&
@@ -52,7 +53,7 @@ function FindProduct(MaterialName: String, GroupName: String, ProductLarge: Numb
         product.Thickness == ProductThickness)
 }
 
-export class SKUController {
+export class ProductController {
     // Defining Inventory Controller Functions
     // Create Product
     static CreateProduct = async (req: Request, res: Response) => {
@@ -109,12 +110,11 @@ export class SKUController {
             NewProduct.Quantity = 0
 
             // Then we need to find the MaterialId/TypeID of the respective Material/Group
-            const FoundMaterial = MaterialList.find(material => material.Name.toLocaleLowerCase() === Request.MaterialName.toLocaleLowerCase())
-            NewProduct.Material = FoundMaterial.Id
+            const FoundMaterial = FindMaterial(Request.MaterialName, MaterialList)
+            NewProduct.MaterialId = FoundMaterial.Id
 
-            const FoundGroup = GroupList.find(group => group.Name.toLocaleLowerCase() === Request.GroupName.toLocaleLowerCase())
-            NewProduct.Group = FoundGroup.Id
-
+            const FoundGroup = FindGroup(Request.GroupName, GroupList)
+            NewProduct.GroupId = FoundGroup.Id
             await Promise.allSettled([NewProduct.save()])
             res.status(200).send({ message: "Successfully Added New Product" })
 
@@ -158,6 +158,7 @@ export class SKUController {
             res.status(200).send({ message: "Successfully Removed Product" })
 
         } catch (error) {
+            console.log(error)
             res.status(500).send({ error: "Internal Server Error" })
         }
     }
@@ -255,16 +256,15 @@ export class SKUController {
                 include: [
                     {
                         model: Material,
-                        attributes: ['Id', 'Name']
+                        attributes: ['Name']
                     },
                     {
                         model: Group,
-                        attributes: ['Id', 'Name']
+                        attributes: ['Name']
                     }
                 ],
                 raw: true
             })
-            console.log(ProductList)
             res.status(200).send({
                 message: "Success Queried Product List",
                 data: ProductList

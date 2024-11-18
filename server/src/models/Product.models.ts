@@ -21,7 +21,7 @@ class Product extends Model {
     @Column({
         type: DataType.INTEGER
     })
-    declare Material: number;
+    declare MaterialId: number;
     @BelongsTo(() => Material)
     declare MaterialInfo: Material;
 
@@ -30,7 +30,7 @@ class Product extends Model {
     @Column({
         type: DataType.INTEGER
     })
-    declare Group: number;
+    declare GroupId: number;
     @BelongsTo(() => Group)
     declare GroupInfo: Group;
 
