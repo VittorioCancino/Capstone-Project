@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient, useQuery } from "react-query";
-import { ToastContainer, toast } from "react-toastify";
-import { GetAllMaterials } from "../../api/MaterialApi";
-import { GetAllTypes } from "../../api/TypeApi";
+import React, { useState } from "react";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
+import { GetAllWarehouses } from "../../api/WarehouseApi";
 
 interface Stores {
-    Id: number;
-    Name: string;
+    Id: number,
+    Name: string,
+    Address: String,
+    Manager: String,
+    Phone: String,
+    Email: String,
+    Schedule: String
 }
 
 interface AllStoresProps {
@@ -21,7 +23,7 @@ const AllStores: React.FC<AllStoresProps> = ({ filter }) => {
 
     const { data, error, isError, isLoading } = useQuery(
         "stores",
-        GetAllTypes,
+        GetAllWarehouses,
         {
             onSuccess: (data) => {
                 setStores(data.data);

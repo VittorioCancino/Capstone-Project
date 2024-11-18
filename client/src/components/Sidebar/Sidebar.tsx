@@ -35,17 +35,18 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                             <div className="flex justify-between space-x-16">
                                 <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
                                     <h4
-                                        className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
-                                        onClick={() => { setFilterComponent("Areas"); setShowDropdown(!showDropdown) }}
-                                    >
-                                        Areas
-                                    </h4>
-                                    <h4
-                                        className="font-semibold text-gray-700  mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        className="font-semibold text-gray-700  cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
                                         onClick={() => { setFilterComponent("Stores"); setShowDropdown(!showDropdown) }}
                                     >
                                         Bodegas
                                     </h4>
+                                    <h4
+                                        className="font-semibold text-gray-700 mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Areas"); setShowDropdown(!showDropdown) }}
+                                    >
+                                        Areas
+                                    </h4>
+
                                     <h4
                                         className="font-semibold text-gray-700  mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
                                         onClick={() => { setFilterComponent("Groups"); setShowDropdown(!showDropdown) }}
