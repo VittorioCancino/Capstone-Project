@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { SKUController } from "../controllers/ProductController";
+import { ProductController } from "../controllers/ProductController";
 import { HandleInputErros } from "../middleware";
 
 const RouterProduct = Router();
@@ -8,31 +8,31 @@ const RouterProduct = Router();
 RouterProduct.post(
     "/create-product",
     HandleInputErros,
-    SKUController.CreateProduct
+    ProductController.CreateProduct
 )
 
 RouterProduct.post(
     "/remove-product",
     HandleInputErros,
-    SKUController.RemoveProduct
+    ProductController.RemoveProduct
 )
 
 RouterProduct.post(
     "/add-stock-product",
     HandleInputErros,
-    SKUController.AddStockToProduct
+    ProductController.AddStockToProduct
 )
 
 RouterProduct.post(
     "/remove-stock-product",
     HandleInputErros,
-    SKUController.RemoveStockFromProduct
+    ProductController.RemoveStockFromProduct
 )
 
 RouterProduct.get(
     "/get-products-information",
     HandleInputErros,
-    SKUController.GetProductsInformation
+    ProductController.GetProductsInformation
 )
 
 export default RouterProduct;

@@ -1,11 +1,10 @@
-import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, HasMany, CreatedAt } from "sequelize-typescript"
+import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType } from "sequelize-typescript"
 
 @Table({
     tableName: "Group"
 })
 
 class Group extends Model {
-    // TODO Add Nature of the variables
     // Id of the Group
     @PrimaryKey
     @AutoIncrement

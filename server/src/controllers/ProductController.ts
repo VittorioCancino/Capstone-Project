@@ -1,29 +1,38 @@
 import type { Request, Response } from "express";
 import Product from "../models/Product.models";
 import Material from "../models/Material.model";
-import Type from "../models/Group.models";
+import Group from "../models/Group.models";
 
-interface ProductSchema {
+// EXTERNAL FUNCTIONS
+// Materials Functions
+import { CheckMaterial } from "./MaterialController";
+import { FindMaterial } from "./MaterialController";
+
+// Group Functions
+import { CheckGroup } from "./GroupController";
+import { FindGroup } from "./GroupController";
+
+// INTERFACES
+export interface ProductSchema {
     Id: number
-    Material: number
-    Type: number
+    MaterialId: number
+    GroupId: number
     Large: number
     Width: number
     Thickness: number
     MaterialInfo: Material
-    TypeInfo: Type
+    GroupInfo: Group
 }
 
 interface CreateProductSchema {
-    Material: string
-    Type: string
-    Large: number
-    Width: number
-    Thickness: number
+    MaterialName: string
+    GroupName: string
+    ProductLarge: number
+    ProductWidth: number
+    ProductThickness: number
 }
 
 interface RemoveProductSchema extends CreateProductSchema {
-
 }
 
 interface AddStockToProductSchema extends CreateProductSchema {
@@ -33,7 +42,18 @@ interface AddStockToProductSchema extends CreateProductSchema {
 interface RemoveStockFromProductSchema extends AddStockToProductSchema {
 }
 
-export class SKUController {
+// FUNCTIONS
+// FindProduct: Find a Product in a ProductList
+export function FindProduct(MaterialName: String, GroupName: String, ProductLarge: Number, ProductWidth: Number, ProductThickness: Number, ProductList: ProductSchema[]) {
+    return ProductList.find((product) =>
+        product["MaterialInfo.Name"].toLocaleLowerCase() == MaterialName.toLocaleLowerCase() &&
+        product["GroupInfo.Name"].toLocaleLowerCase() == GroupName.toLocaleLowerCase() &&
+        product.Large == ProductLarge &&
+        product.Width == ProductWidth &&
+        product.Thickness == ProductThickness)
+}
+
+export class ProductController {
     // Defining Inventory Controller Functions
     // Create Product
     static CreateProduct = async (req: Request, res: Response) => {
@@ -41,20 +61,20 @@ export class SKUController {
             // Structure The Request Schema
             const Request: CreateProductSchema = req.body
 
-            // Get the list of materials and type 
+            // Get the list of materials and group 
             const MaterialList = await Material.findAll({ raw: true })
-            const TypeList = await Type.findAll({ raw: true })
+            const GroupList = await Group.findAll({ raw: true })
 
             // Check if the incoming types and materials exists
-            const MaterialExists = MaterialList.some(material => material.Name.toLocaleLowerCase() === Request.Material.toLocaleLowerCase())
+            const MaterialExists = CheckMaterial(Request.MaterialName, MaterialList)
             if (!MaterialExists) {
                 res.status(400).send({ error: "Material Does Not Exists" })
                 return
             }
 
-            const TypeExists = TypeList.some(type => type.Name.toLocaleLowerCase() === Request.Type.toLocaleLowerCase())
-            if (!TypeExists) {
-                res.status(400).send({ error: "Type Does Not Exists" })
+            const GroupExists = CheckGroup(Request.GroupName, GroupList)
+            if (!GroupExists) {
+                res.status(400).send({ error: "Group Does Not Exists" })
                 return
             }
 
@@ -66,41 +86,35 @@ export class SKUController {
                         attributes: ['Id', 'Name']
                     },
                     {
-                        model: Type,
+                        model: Group,
                         attributes: ['Id', 'Name']
                     }
                 ],
                 raw: true
             })
 
-            const matchingProduct: ProductSchema = ProductList.find((product) =>
-                product["MaterialInfo.Name"].toLocaleLowerCase() == Request.Material.toLocaleLowerCase() &&
-                product["TypeInfo.Name"].toLocaleLowerCase() == Request.Type.toLocaleLowerCase() &&
-                product.Large == Request.Large &&
-                product.Width == Request.Width &&
-                product.Thickness == Request.Thickness)
+            const matchingProduct: ProductSchema = FindProduct(Request.MaterialName, Request.GroupName, Request.ProductLarge, Request.ProductWidth, Request.ProductThickness, ProductList)
 
             if (matchingProduct) {
                 res.status(400).send({ error: "Product Alredy Exists" })
                 return
             }
 
-            // If the Material and Type Exists and The Product does not, then we create the new product
+            // If the Material and Group Exists and The Product does not, then we create the new product
             const NewProduct = new Product();
 
             // First we start by the dimensions
-            NewProduct.Large = Request.Large
-            NewProduct.Width = Request.Width
-            NewProduct.Thickness = Request.Thickness
+            NewProduct.Large = Request.ProductLarge
+            NewProduct.Width = Request.ProductWidth
+            NewProduct.Thickness = Request.ProductThickness
             NewProduct.Quantity = 0
 
-            // Then we need to find the MaterialId/TypeID of the respective Material/Type
-            const FoundMaterial = MaterialList.find(material => material.Name.toLocaleLowerCase() === Request.Material.toLocaleLowerCase())
-            NewProduct.Material = FoundMaterial.Id
+            // Then we need to find the MaterialId/TypeID of the respective Material/Group
+            const FoundMaterial = FindMaterial(Request.MaterialName, MaterialList)
+            NewProduct.MaterialId = FoundMaterial.Id
 
-            const FoundType = TypeList.find(type => type.Name.toLocaleLowerCase() === Request.Type.toLocaleLowerCase())
-            NewProduct.Type = FoundType.Id
-
+            const FoundGroup = FindGroup(Request.GroupName, GroupList)
+            NewProduct.GroupId = FoundGroup.Id
             await Promise.allSettled([NewProduct.save()])
             res.status(200).send({ message: "Successfully Added New Product" })
 
@@ -123,19 +137,14 @@ export class SKUController {
                         attributes: ['Id', 'Name']
                     },
                     {
-                        model: Type,
+                        model: Group,
                         attributes: ['Id', 'Name']
                     }
                 ],
                 raw: true
             })
 
-            const matchingProduct: ProductSchema = ProductList.find((product) =>
-                product["MaterialInfo.Name"].toLocaleLowerCase() == Request.Material.toLocaleLowerCase() &&
-                product["TypeInfo.Name"].toLocaleLowerCase() == Request.Type.toLocaleLowerCase() &&
-                product.Large == Request.Large &&
-                product.Width == Request.Width &&
-                product.Thickness == Request.Thickness)
+            const matchingProduct: ProductSchema = FindProduct(Request.MaterialName, Request.GroupName, Request.ProductLarge, Request.ProductWidth, Request.ProductThickness, ProductList)
 
             if (!matchingProduct) {
                 res.status(400).send({ error: "Product Does Not Exists" })
@@ -149,6 +158,7 @@ export class SKUController {
             res.status(200).send({ message: "Successfully Removed Product" })
 
         } catch (error) {
+            console.log(error)
             res.status(500).send({ error: "Internal Server Error" })
         }
     }
@@ -167,19 +177,14 @@ export class SKUController {
                         attributes: ['Id', 'Name']
                     },
                     {
-                        model: Type,
+                        model: Group,
                         attributes: ['Id', 'Name']
                     }
                 ],
                 raw: true
             })
 
-            const matchingProduct: ProductSchema = ProductList.find((product) =>
-                product["MaterialInfo.Name"].toLocaleLowerCase() == Request.Material.toLocaleLowerCase() &&
-                product["TypeInfo.Name"].toLocaleLowerCase() == Request.Type.toLocaleLowerCase() &&
-                product.Large == Request.Large &&
-                product.Width == Request.Width &&
-                product.Thickness == Request.Thickness)
+            const matchingProduct: ProductSchema = FindProduct(Request.MaterialName, Request.GroupName, Request.ProductLarge, Request.ProductWidth, Request.ProductThickness, ProductList)
 
             if (!matchingProduct) {
                 res.status(400).send({ error: "Product Does Not Exists" })
@@ -214,19 +219,14 @@ export class SKUController {
                         attributes: ['Id', 'Name']
                     },
                     {
-                        model: Type,
+                        model: Group,
                         attributes: ['Id', 'Name']
                     }
                 ],
                 raw: true
             })
 
-            const matchingProduct: ProductSchema = ProductList.find((product) =>
-                product["MaterialInfo.Name"].toLocaleLowerCase() == Request.Material.toLocaleLowerCase() &&
-                product["TypeInfo.Name"].toLocaleLowerCase() == Request.Type.toLocaleLowerCase() &&
-                product.Large == Request.Large &&
-                product.Width == Request.Width &&
-                product.Thickness == Request.Thickness)
+            const matchingProduct: ProductSchema = FindProduct(Request.MaterialName, Request.GroupName, Request.ProductLarge, Request.ProductWidth, Request.ProductThickness, ProductList)
 
             if (!matchingProduct) {
                 res.status(400).send({ error: "Product Does Not Exists" })
@@ -256,16 +256,15 @@ export class SKUController {
                 include: [
                     {
                         model: Material,
-                        attributes: ['Id', 'Name']
+                        attributes: ['Name']
                     },
                     {
-                        model: Type,
-                        attributes: ['Id', 'Name']
+                        model: Group,
+                        attributes: ['Name']
                     }
                 ],
                 raw: true
             })
-            console.log(ProductList)
             res.status(200).send({
                 message: "Success Queried Product List",
                 data: ProductList

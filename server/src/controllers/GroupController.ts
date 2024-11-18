@@ -1,13 +1,25 @@
 import type { Request, Response } from "express";
 import Group from "../models/Group.models";
 
+// INTERFACES
 interface GroupSchema {
     Id: number
     Name: string
 }
 
 interface RequestSchema {
-    Name: string
+    GroupName: string
+}
+
+// FUNCTIONS
+// CheckGroup: Check if a Group exist in a Grouplist
+export function CheckGroup(Group: String, GroupList: GroupSchema[]) {
+    return GroupList.some(type => type.Name.toLocaleLowerCase() === Group.toLocaleLowerCase())
+}
+
+// FindGroup: Find a Group in a Grouplist
+export function FindGroup(Group: String, GroupList: GroupSchema[]) {
+    return GroupList.find(type => type.Name.toLocaleLowerCase() === Group.toLocaleLowerCase())
 }
 
 export class GroupController {
@@ -25,7 +37,7 @@ export class GroupController {
             });
 
             // See if the Requested Group alredy Exists
-            const GroupExists = GroupList.some(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const GroupExists = CheckGroup(Request.GroupName, GroupList)
             if (GroupExists) {
                 res.status(400).send({ error: "Group Alredy Exists" })
                 return
@@ -33,7 +45,7 @@ export class GroupController {
 
             // Create and save the new Group
             const newType = new Group();
-            newType.Name = Request.Name
+            newType.Name = Request.GroupName
             await Promise.allSettled([newType.save()])
             res.status(200).send({ message: "Group Successfully Created" })
 
@@ -55,14 +67,14 @@ export class GroupController {
             });
 
             // See if the Requested Group alredy Exists
-            const GroupExists = GroupList.some(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const GroupExists = CheckGroup(Request.GroupName, GroupList)
             if (!GroupExists) {
                 res.status(400).send({ error: "Group Does Not Exists" })
                 return
             }
 
             // Structure the found Group
-            const RemoveGroup = GroupList.find(type => type.Name.toLocaleLowerCase() === Request.Name.toLocaleLowerCase())
+            const RemoveGroup = FindGroup(Request.GroupName, GroupList)
             await Promise.allSettled([Group.destroy({ where: { Id: RemoveGroup.Id } })])
             res.status(200).send({ message: "Group Successfully Removed" })
 

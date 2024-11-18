@@ -1,11 +1,12 @@
 import { Table, Column, Model, ForeignKey, PrimaryKey, DataType, BelongsTo, AutoIncrement, Unique } from "sequelize-typescript";
 import Area from "./Area.models";
-import Producto from "./Product.models";
+import Product from "./Product.models";
 
 @Table({
-    tableName: "Disposicion",
+    tableName: "ProductArea",
 })
-class Disposicion extends Model {
+class ProductArea extends Model {
+    // Id of the ProductArea
     @PrimaryKey
     @AutoIncrement
     @Column({
@@ -13,30 +14,33 @@ class Disposicion extends Model {
     })
     declare Id: number;
 
-    @ForeignKey(() => Producto)
+    // Id of the Product inside the Area
+    @ForeignKey(() => Product)
     @Column({
         type: DataType.INTEGER,
     })
-    declare ProductoId: number;
+    declare ProductId: number;
 
+    // Id of the Area where the Product is located
     @ForeignKey(() => Area)
     @Column({
         type: DataType.INTEGER,
     })
     declare AreaId: number;
 
+    // Unique identifier (Sequelize does not support composite Primary Keys)
     @Unique
     @Column({
         type: DataType.STRING,
     })
-    declare UID: number;
+    declare UID: string;
 
     // Relationships
-    @BelongsTo(() => Producto)
-    declare Material: Producto;
+    @BelongsTo(() => Product)
+    declare Product: Product;
 
     @BelongsTo(() => Area)
     declare Area: Area;
 }
 
-export default Disposicion;
+export default ProductArea;

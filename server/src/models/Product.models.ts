@@ -1,5 +1,5 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, ForeignKey, BelongsTo } from "sequelize-typescript"
-import Type from "./Group.models"
+import Group from "./Group.models"
 import Material from "./Material.model";
 
 @Table({
@@ -21,18 +21,18 @@ class Product extends Model {
     @Column({
         type: DataType.INTEGER
     })
-    declare Material: number;
+    declare MaterialId: number;
     @BelongsTo(() => Material)
     declare MaterialInfo: Material;
 
-    // Type of the Product
-    @ForeignKey(() => Type)
+    // Group of the Product
+    @ForeignKey(() => Group)
     @Column({
         type: DataType.INTEGER
     })
-    declare Type: number;
-    @BelongsTo(() => Type)
-    declare TypeInfo: Type;
+    declare GroupId: number;
+    @BelongsTo(() => Group)
+    declare GroupInfo: Group;
 
     // Large of the Product
     @Column({

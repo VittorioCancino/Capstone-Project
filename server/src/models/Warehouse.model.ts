@@ -1,13 +1,11 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType } from "sequelize-typescript"
 
 @Table({
-    tableName: "Bodega",
+    tableName: "Warehouse",
 })
 
-class Bodega extends Model {
-
-    // TODO Add Nature of the variables
-    // Id of the Material
+class Warehouse extends Model {
+    // Id of the Warehouse
     @PrimaryKey
     @AutoIncrement
     @Column({
@@ -15,41 +13,41 @@ class Bodega extends Model {
     })
     declare Id: number;
 
-    // Name of the Bodega
+    // Name of the Warehouse
     @Column({
         type: DataType.STRING
     })
     declare Name: string;
 
-    // Name of the Direccion
+    // Adress of the Warehouse
     @Column({
         type: DataType.STRING
     })
-    declare Direccion: string;
+    declare Address: string;
 
-    // Name of the Encargado
+    //  Manager of the Warehouse
     @Column({
         type: DataType.STRING
     })
-    declare Encargado: string;
+    declare Manager: string;
 
-    // Name of the Telefono
+    //  Phone of the Warehouse
     @Column({
         type: DataType.STRING
     })
-    declare Telefono: string;
+    declare Phone: string;
 
-    // Name of the Email
+    //  Contact Email
     @Column({
         type: DataType.STRING
     })
     declare Email: string;
 
-    // Name of the Horario
+    //  Schedule of the Warehouse
     @Column({
         type: DataType.STRING
     })
-    declare Horario: string;
+    declare Schedule: string;
 }
 
-export default Bodega
+export default Warehouse

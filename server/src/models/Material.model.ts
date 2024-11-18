@@ -5,7 +5,6 @@ import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType } from "seque
 })
 
 class Material extends Model {
-    // TODO Add Nature of the variables
     // Id of the Material
     @PrimaryKey
     @AutoIncrement
@@ -13,7 +12,6 @@ class Material extends Model {
         type: DataType.INTEGER
     })
     declare Id: number;
-
 
     // Name of the Material
     @Column({
