@@ -19,7 +19,7 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                         onClick={() => setFilterComponent(null)}
                         className="w-full text-left p-2 hover:bg-gray-200 rounded"
                     >
-                        🏠 All Cards
+                        🏠 Todos los productos
                     </button>
                 </li>
                 <li className="relative">
@@ -31,30 +31,30 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                         <span className="ml-2">▼</span>
                     </button>
                     {showDropdown && (
-                        <div className="absolute left-0 mt-2 w-auto bg-white border border-gray-200 rounded-xl shadow-lg p-4">
+                        <div className="absolute left-20 mt-2 w-auto bg-white border border-gray-200 rounded-xl shadow-lg p-4">
                             <div className="flex justify-between space-x-16">
                                 <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
                                     <h4
-                                        className="font-semibold text-gray-700 underline cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                                        onClick={() => setFilterComponent("Areas")}
+                                        className="font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Areas"); setShowDropdown(!showDropdown) }}
                                     >
                                         Areas
                                     </h4>
                                     <h4
-                                        className="font-semibold text-gray-700 underline mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                                        onClick={() => setFilterComponent("Stores")}
+                                        className="font-semibold text-gray-700  mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Stores"); setShowDropdown(!showDropdown) }}
                                     >
                                         Bodegas
                                     </h4>
                                     <h4
-                                        className="font-semibold text-gray-700 underline mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                                        onClick={() => setFilterComponent("Groups")}
+                                        className="font-semibold text-gray-700  mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Groups"); setShowDropdown(!showDropdown) }}
                                     >
                                         Grupos
                                     </h4>
                                     <h4
-                                        className="font-semibold text-gray-700 underline mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-                                        onClick={() => setFilterComponent("Products")}
+                                        className="font-semibold text-gray-700 mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Products"); setShowDropdown(!showDropdown) }}
                                     >
                                         Productos
                                     </h4>
