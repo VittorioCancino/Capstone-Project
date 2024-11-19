@@ -55,9 +55,9 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                                     </h4>
                                     <h4
                                         className="font-semibold text-gray-700 mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
-                                        onClick={() => { setFilterComponent("Products"); setShowDropdown(!showDropdown) }}
+                                        onClick={() => { setFilterComponent("Materials"); setShowDropdown(!showDropdown) }}
                                     >
-                                        Productos
+                                        Materiales
                                     </h4>
                                 </div>
                             </div>

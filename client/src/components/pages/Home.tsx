@@ -4,6 +4,8 @@ import Navbar from "../Navbar/Navbar";
 import SideBar from "../Sidebar/Sidebar";
 import AreasList from "../Areas/AreasList";
 import StoreList from "../Stores/StoresList";
+import GroupList from "../Groups/GroupList";
+import MaterialList from "../Materials/MaterialList";
 
 function Home() {
 
@@ -16,8 +18,10 @@ function Home() {
         return <AreasList />;
       case "Stores":
         return <StoreList />;
-      case "Reports":
-        return //<Reports />;
+      case "Groups":
+        return <GroupList />;
+      case "Materials":
+        return <MaterialList />;
       default:
         return <SampleCards filter={filter} />;
     }

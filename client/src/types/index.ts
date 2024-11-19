@@ -5,11 +5,20 @@ z.object({
     Name: z.string().min(1,"El nombre es obligatorio"),
 });
 
-export const CreateTypeSchema = InitialSchema;
+export const CreateTypeSchema = z.object({
+    GroupName: z.string().min(1,"El nombre es obligatorio"),
+});
 export type CreateType = z.infer<typeof CreateTypeSchema>;
 
-export const CreateMaterialSchema = InitialSchema;
+export const CreateMaterialSchema = z.object({
+    Name: z.string().min(1,"El nombre es obligatorio"),
+});
 export type CreateMaterial = z.infer<typeof CreateMaterialSchema>;
+
+export const DeleteMaterialSchema = z.object({
+    MaterialName: z.string().min(1,"El nombre es obligatorio"),
+});
+export type DeleteMaterial = z.infer<typeof CreateMaterialSchema>;
 
 export const CreateWarehouseSchema = 
 z.object({
