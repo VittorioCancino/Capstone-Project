@@ -2,13 +2,21 @@ import React from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import { CreateWarehouse, DeleteWarehouse } from "../../types";
+import { CreateArea, DeleteArea } from "../../types";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import { CreateWarehouses, RemoveWarehouses, GetAllWarehouses } from "../../api/WarehouseApi";
+import { CreateAreas, GetAllAreas, RemoveAreas } from "../../api/AreaApi";
+import { GetAllWarehouses } from "../../api/WarehouseApi";
 
 
-interface Stores {
+interface Areas {
+    Id: number,
+    Name: string,
+    WName: string,
+    WarehouseId: number
+}
+
+interface Store {
     Id: number,
     Name: string,
     Address: String,
@@ -18,66 +26,62 @@ interface Stores {
     Schedule: String
 }
 
+
 const AddDeleteButton = () => {
 
     const queryClient = useQueryClient();
 
     const [showModal, setShowModal] = useState(false);
-    const [storeName, setStoreName] = useState("");
-    const [storeAddress, setStoreAddres] = useState("");
-    const [storeManager, setStoreManager] = useState("");
-    const [storePhone, setStorePhone] = useState("");
-    const [storeEmail, setStoreEmail] = useState("");
-    const [storeSchedule, setStoreSchedule] = useState("");
+    const [areaName, setareaName] = useState("");
+    const [areaWName, setareaWName] = useState("");
+    const [areaWId, setareaWId] = useState(0);
+    const [stores, setStores] = useState<Store[]>([]);
     const [addOrDelete, setAddOrDelete] = useState("");
-    const [stores, setStores] = useState<Stores[]>([]);
+    const [areas, setareas] = useState<Areas[]>([]);
 
-    const initialValuesWare: CreateWarehouse = {
+    const initialValuesArea: CreateArea = {
         WarehouseName: "",
-        WarehouseAdress: "",
-        WarehouseManager: "",
-        WarehousePhone: "",
-        WarehouseEmail: "",
-        WarehouseSchedule: ""
+        AreaName: "",
     };
 
-    const initialValuesWareD: DeleteWarehouse = {
-        WarehouseName: ""
+    const initialValuesAreaD: DeleteArea = {
+        WarehouseName: "",
+        AreaName: "",
     };
 
     const {
         register: registerWarehouse,
         formState: { errors: errorsWare },
         handleSubmit: handleSubmitWarehouse,
-        reset: resetWare,
-    } = useForm<CreateWarehouse>({ defaultValues: initialValuesWare });
+        reset: resetArea,
+    } = useForm<CreateArea>({ defaultValues: initialValuesArea });
 
     const {
         register: registerWarehouseD,
         formState: { errors: errorsWareD },
         handleSubmit: handleSubmitWarehouseD,
-        reset: resetWareD,
-    } = useForm<DeleteWarehouse>({ defaultValues: initialValuesWareD });
+        reset: resetAreaD,
+    } = useForm<DeleteArea>({ defaultValues: initialValuesAreaD });
 
-    const { mutate: mutateWarehouse } = useMutation(CreateWarehouses, {
+    const { mutate: mutateArea } = useMutation(CreateAreas, {
         onError: (error: Error) => {
             toast.error(error.message);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries("stores");
+            queryClient.invalidateQueries("areas");
             toast.success("Bodega creado exitosamente");
-            resetWare();
+            resetArea();
         },
     });
 
-    const { mutate: mutateWarehouseR } = useMutation(RemoveWarehouses, {
+    const { mutate: mutateAreaR } = useMutation(RemoveAreas, {
         onError: (error: Error) => {
             toast.error(error.message);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries("stores");
+            queryClient.invalidateQueries("areas");
             toast.success("Bodega eliminado exitosamente");
-            resetWareD();
+            resetAreaD();
         },
     });
 
@@ -88,42 +92,51 @@ const AddDeleteButton = () => {
     const openModal = () => setShowModal(true);
     const closeModal = () => {
         setShowModal(false);
-        setStoreName("");
+        setareaName("");
     };
 
     const handleAddSubmit = () => {
-        const formData: CreateWarehouse = {
-            WarehouseName: storeName,
-            WarehouseAdress: storeAddress,
-            WarehouseManager: storeManager,
-            WarehousePhone: storePhone,
-            WarehouseEmail: storeEmail,
-            WarehouseSchedule: storeSchedule
+        const formData: CreateArea = {
+            WarehouseName: areaWName,
+            AreaName: areaName
         };
-        mutateWarehouse(formData);
+        mutateArea(formData);
         closeModal();
     };
 
     const handleDeleteSubmit = () => {
-        const formData: DeleteWarehouse = {
-            WarehouseName: storeName
+        const formData: DeleteArea = {
+            WarehouseName: stores.find((store) => store.Id === areaWId)?.Name ?? "Nombre no disponible",
+            AreaName: areaName
         };
         console.log(formData);
-        mutateWarehouseR(formData);
+        mutateAreaR(formData);
         closeModal();
     };
 
-    const handleNameChange = (event) => setStoreName(event.target.value);
-    const handleAddressChange = (event) => setStoreAddres(event.target.value);
-    const handleManagerChange = (event) => setStoreManager(event.target.value);
-    const handlePhoneChange = (event) => setStorePhone(event.target.value);
-    const handleEmailChange = (event) => setStoreEmail(event.target.value);
-    const handleScheduleChange = (event) => setStoreSchedule(event.target.value);
+    const handleNameChange = (event) => setareaName(event.target.value);
+    const handleWNameChange = (event) => setareaWName(event.target.value);
+    const handleWNameChange2 = (value) => {
+        setareaWName(value);
+    };
     const handleNameChange2 = (value) => {
-        setStoreName(value);
+        setareaName(value);
     };
 
-    const { data, error, isError, isLoading } = useQuery(
+    const { data: areasData, error: areasError, isError: isAreasError, isLoading: isAreasLoading, } = useQuery(
+        "areas",
+        GetAllAreas,
+        {
+            onSuccess: (data) => {
+                setareas(data.data);
+            },
+            onError: (error: Error) => {
+                toast.error(error.message);
+            },
+        }
+    );
+
+    const { data: storesData, error: storesError, isError: isStoresError, isLoading: isStoresLoading, } = useQuery(
         "stores",
         GetAllWarehouses,
         {
@@ -147,7 +160,7 @@ const AddDeleteButton = () => {
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
             >
-                Crear nueva bodega
+                Crear nueva area
             </button>
 
             {/* Botón Eliminar */}
@@ -158,61 +171,37 @@ const AddDeleteButton = () => {
                 }}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
             >
-                Eliminar bodega
+                Eliminar area
             </button>
             {showModal && addOrDelete === "Agregar" && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h2 className="text-lg font-semibold mb-4">Ingresar datos</h2>
                         <label className="block mb-4">
-                            <span className="text-gray-700">Nombre de la bodega:</span>
+                            <span className="text-gray-700">Nombre del area:</span>
                             <input
                                 type="text"
-                                value={storeName}
+                                value={areaName}
                                 onChange={handleNameChange}
                                 placeholder={``}
                                 className="block w-full mt-1 p-2 border border-gray-300 rounded"
                             />
-                            <span className="text-gray-700 block mt-6">Dirección de la bodega:</span>
-                            <input
-                                type="text"
-                                value={storeAddress}
-                                onChange={handleAddressChange}
-                                placeholder={``}
+                            <span className="text-gray-700 block mt-6">Bodega del area:</span>
+                            <select
+                                value={areaWName}
+                                onChange={(e) => setareaWName(e.target.value)}
                                 className="block w-full mt-1 p-2 border border-gray-300 rounded"
-                            />
-                            <span className="text-gray-700 block mt-6">Encargado de la bodega:</span>
-                            <input
-                                type="text"
-                                value={storeManager}
-                                onChange={handleManagerChange}
-                                placeholder={``}
-                                className="block w-full mt-1 p-2 border border-gray-300 rounded"
-                            />
-                            <span className="text-gray-700 block mt-6">Teléfono de la bodega:</span>
-                            <input
-                                type="text"
-                                value={storePhone}
-                                onChange={handlePhoneChange}
-                                placeholder={`Número telefónico`}
-                                className="block w-full mt-1 p-2 border border-gray-300 rounded"
-                            />
-                            <span className="text-gray-700 block mt-6">Email de la bodega:</span>
-                            <input
-                                type="text"
-                                value={storeEmail}
-                                onChange={handleEmailChange}
-                                placeholder={`example@mail.com`}
-                                className="block w-full mt-1 p-2 border border-gray-300 rounded"
-                            />
-                            <span className="text-gray-700 block mt-6">Horarios de la bodega:</span>
-                            <input
-                                type="text"
-                                value={storeSchedule}
-                                onChange={handleScheduleChange}
-                                placeholder={`08:00-18:00`}
-                                className="block w-full mt-1 p-2 border border-gray-300 rounded"
-                            />
+                            >
+                                <option value="" disabled>Seleccione una bodega:</option>
+                                {stores.map((store) => (
+                                    <option
+                                        key={store.Id}
+                                        value={store.Name}
+                                    >
+                                        {store.Name}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
 
 
@@ -238,19 +227,20 @@ const AddDeleteButton = () => {
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h2 className="text-lg font-semibold mb-4">Ingresar datos</h2>
                         <label className="block mb-4">
-                            <span className="text-gray-700">Nombre de la bodega:</span>
+                            <span className="text-gray-700">Nombre del area:</span>
                             <select
-                                value={storeName}
-                                onChange={(e) => setStoreName(e.target.value)}
+                                value={areaName}
+                                onChange={(e) => {
+                                    const selectedArea = areas.find((area) => area.Name === e.target.value)?.WarehouseId ?? 0;
+                                    setareaName(e.target.value);
+                                    setareaWId(selectedArea);
+                                }}
                                 className="block w-full mt-1 p-2 border border-gray-300 rounded"
                             >
-                                <option value="" disabled>Seleccione una bodega</option>
-                                {stores.map((store) => (
-                                    <option
-                                        key={store.Id}
-                                        value={store.Name}
-                                    >
-                                        {store.Name}
+                                <option value="" disabled>Seleccione un área:</option>
+                                {areas.map((area) => (
+                                    <option key={area.Id} value={area.Name}>
+                                        {area.Name}
                                     </option>
                                 ))}
                             </select>

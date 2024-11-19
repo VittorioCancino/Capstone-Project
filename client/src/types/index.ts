@@ -22,6 +22,26 @@ z.object({
 })
 export type CreateWarehouse = z.infer<typeof CreateWarehouseSchema>
 
+export const DeleteWarehouseSchema = 
+z.object({
+    WarehouseName: z.string().min(1,"El nombre es obligatorio"),
+})
+export type DeleteWarehouse = z.infer<typeof DeleteWarehouseSchema>
+
+export const CreateAreaSchema = 
+z.object({
+    AreaName: z.string().min(1,"El nombre es obligatorio"),
+    WarehouseName: z.string().min(1,"El nombre de bodega es obligatorio"),
+})
+export type CreateArea = z.infer<typeof CreateAreaSchema>
+
+export const DeleteAreaSchema = 
+z.object({
+    AreaName: z.string().min(1,"El nombre es obligatorio"),
+    WarehouseName: z.string().min(1,"El nombre de bodega es obligatorio"),
+})
+export type DeleteArea = z.infer<typeof DeleteAreaSchema>
+
 export const CreateProductSchema = z.object({
     Material: z.string().min(1,"El material es obligaorio"),
     Type: z.string().min(1,"El tipo es obligaorio"),

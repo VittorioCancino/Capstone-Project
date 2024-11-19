@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient, useQuery } from "react-query";
+import { GetAllAreas } from "../../api/AreaApi";
+import { toast } from "react-toastify";
 
 interface Store {
   Id: number,
@@ -11,20 +13,52 @@ interface Store {
   Schedule: String
 }
 
+interface Areas {
+  Id: number,
+  Name: string,
+  WName: string,
+  WarehouseId: number
+}
+
 const StoresInfo = ({ stores }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
+  const [areas, setArea] = useState<Areas[]>([]);
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [filter, setFilter] = useState(null);
 
   const openModal = (store) => {
     setShowModal(true);
     setSelectedStore(store);
+    setFilter(store.Id);
   };
   const closeModal = () => {
     setShowModal(false);
     setSelectedStore(null);
   };
+
+  const { data, error, isError, isLoading } = useQuery(
+    "areas",
+    GetAllAreas,
+    {
+      onSuccess: (data) => {
+        setArea(data.data);
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
+      },
+    }
+  );
+
+  const handleFilterClick = (filterValue) => {
+    setFilter(filterValue);
+  };
+
+  const filteredStores = filter
+    ? areas.filter((areas) => areas.WarehouseId === filter)
+    : areas;
+
 
   return (
     <>
@@ -62,6 +96,17 @@ const StoresInfo = ({ stores }) => {
               <li>Número telefónico: {selectedStore.Phone}</li>
               <li>Email: {selectedStore.Email}</li>
               <li>Horarios: {selectedStore.Schedule}</li>
+              <li>Areas:</li>
+              <ul className="list-decimal pl-10 space-y-2 mb-4 text-gray-700 ">
+                {areas.map((area) => (
+                  <li
+                    key={area.Id}
+                    className="list-decimal cursor-pointer px-2 py-1 rounded"
+                  >
+                    {area.Name}
+                  </li>
+                ))}
+              </ul>
             </ul>
             <div className="flex justify-end space-x-4">
               <button

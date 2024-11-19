@@ -3,41 +3,36 @@ import AreasInfo from "./AreasInfo";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import { GetAllMaterials } from "../../api/MaterialApi";
 import AllAreas from "./AllAreas";
-import { string } from "zod";
+import { CreateArea } from "../../types";
+import { CreateAreas, GetAllAreas, RemoveAreas } from "../../api/AreaApi";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "react-query";
+import AddDeleteButton from "./AddDeleteButton";
 
-interface Product {
-  Id: number;
-  Material: number;
-  Type: number;
-  Large: number;
-  Width: number;
-  Thickness: number;
-  Quantity: number;
-  MaterialInfoId: number; // Cambiado de 'MaterialInfo.Id'
-  MaterialInfoName: string; // Cambiado de 'MaterialInfo.Name'
-  TypeInfoId: number; // Cambiado de 'TypeInfo.Id'
-  TypeInfoName: string; // Cambiado de 'TypeInfo.Name'
-}
 
-interface Areas {
-  Id: number;
+interface Area {
   Name: string;
+  WName: string;
 }
 
-const SampleCards = () => {
+const AreaList = () => {
+
+  const queryClient = useQueryClient();
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [areas, setAreas] = useState<Areas[]>([]);
+  const [area, setArea] = useState<Area[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [productName, setProductName] = useState("");
+  const [addOrDelete, setAddOrDelete] = useState("");
 
   const { data, error, isError, isLoading } = useQuery(
     "areas",
-    GetAllMaterials,
+    GetAllAreas,
     {
       onSuccess: (data) => {
-        setAreas(data.data);
+        setArea(data.data);
       },
       onError: (error: Error) => {
         toast.error(error.message);
@@ -53,40 +48,26 @@ const SampleCards = () => {
   };
 
   const filteredAreas = filter
-    ? areas.filter((area) => area.Name === filter)
-    : areas;
+    ? area.filter((area) => area.Name === filter)
+    : area;
 
   return (
-    <div>
-      <h1 className="text-4xl underline text-center mt-6">Areas</h1>
-      <div className="relative mt-8 mb-8">
-        <button
-          onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-full focus:outline-none"
-        >
-          Filtrar
-          <span className="ml-2">▼</span>
-        </button>
-
-        {showDropdown && (
-          <div className="absolute left-0 mt-2 w-auto bg-white border border-gray-200 rounded-xl shadow-lg p-4">
-            <div className="justify-between">
-              <AllAreas filter={handleFilterClick} />
-              <div className="flex flex-col items-start space-y-2 whitespace-nowrap">
-                <h4
-                  className="font-semibold text-gray-700 underline mt-4 cursor-pointer hover:bg-gray-100 py-1 rounded"
-                  onClick={() => handleFilterClick("")}
-                >
-                  Limpiar Filtro
-                </h4>
-              </div>
-            </div>
+    <>
+      <div>
+        <h1 className="text-4xl underline text-center mt-6">Areas</h1>
+        <div className="relative mt-8 mb-8">
+          <div className="flex items-center space-x-4">
+            <AddDeleteButton />
           </div>
-        )}
+        </div>
+        <AreasInfo areas={filteredAreas} />
       </div>
-      <AreasInfo products={filteredAreas} />
-    </div>
+
+
+
+    </>
   );
 };
 
-export default SampleCards;
+export default AreaList;
+

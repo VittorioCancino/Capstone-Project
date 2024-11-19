@@ -1,50 +1,37 @@
 import React, { useState } from "react";
 import { AddStock, RemoveStock } from "../../api/ProductApi";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient, useQuery } from "react-query";
+import { toast } from "react-toastify";
+import { GetAllWarehouses } from "../../api/WarehouseApi";
 
-interface Product {
+interface Area {
   Id: number;
-  Material: number;
-  Type: number;
-  Large: number;
-  Width: number;
-  Thickness: number;
-  Quantity: number;
-  MaterialInfoId: number; // Cambiado de 'MaterialInfo.Id'
-  MaterialInfoName: string; // Cambiado de 'MaterialInfo.Name'
-  TypeInfoId: number; // Cambiado de 'TypeInfo.Id'
-  TypeInfoName: string; // Cambiado de 'TypeInfo.Name'
+  Name: string;
+  WarehouseId: number;
 }
 
-const ProductList = ({ products }) => {
+interface Store {
+  Id: number,
+  Name: string,
+  Address: String,
+  Manager: String,
+  Phone: String,
+  Email: String,
+  Schedule: String
+}
+
+
+const AreasInfo = ({ areas }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Area | null>(null);
   const [selectedAction, setSelectedAction] = useState(true);
-  const [quantity, setQuantity] = useState(0);
+  const [stores, setStores] = useState<Store[]>([]);
+  const [filter, setFilter] = useState(null);
+
 
   const queryClient = useQueryClient();
-
-  const { mutate: mutateAdd } = useMutation(AddStock, {
-    onSuccess: (updater) => {
-      queryClient.invalidateQueries("products");
-      setSelectedProduct((prev) => ({
-        ...prev,
-        ...updater,
-      }));
-    },
-  });
-
-  const { mutate: mutateRemove } = useMutation(RemoveStock, {
-    onSuccess: (updater) => {
-      queryClient.invalidateQueries("products");
-      setSelectedProduct((prev) => ({
-        ...prev,
-        ...updater,
-      }));
-    },
-  });
 
   const openModal = (product) => {
     setShowModal(true);
@@ -55,24 +42,23 @@ const ProductList = ({ products }) => {
     setSelectedProduct(null);
   };
 
-  const openUpdate = (action) => {
-    setShowUpdate(true);
-    setSelectedAction(action);
-  };
-  const closeUpdate = () => {
-    setShowUpdate(false);
-  };
-
-  const handleUpdateQuantity = (updater) => {
+  const { data: storesData, error: storesError, isError: isStoresError, isLoading: isStoresLoading, } = useQuery(
+    "stores",
+    GetAllWarehouses,
     {
-      selectedAction ? mutateAdd(updater) : mutateRemove(updater);
+      onSuccess: (data) => {
+        setStores(data.data);
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
+      },
     }
-  };
+  );
 
   return (
     <>
       <div className="flex flex-col space-y-2">
-        {products
+        {areas
           .sort((a, b) => a.Id - b.Id)
           .map((product) => (
             <div
@@ -96,102 +82,14 @@ const ProductList = ({ products }) => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 className="text-lg font-semibold mb-4">
-              SKU: {selectedProduct.MaterialInfoName}
-              {selectedProduct.TypeInfoName}
-              {selectedProduct.Large}x{selectedProduct.Width}cm
-              {selectedProduct.Thickness}mc
+              Area: {selectedProduct.Name}
             </h2>
             <ul className="list-disc pl-5 space-y-2 mb-4 text-gray-700">
-              <li>ID del Producto: {selectedProduct.Id}</li>
-              <li>Material: {selectedProduct.MaterialInfoName}</li>
-              <li>Tipo: {selectedProduct.TypeInfoName}</li>
-              <li>Largo: {selectedProduct.Large} cm</li>
-              <li>Ancho: {selectedProduct.Width} cm</li>
-              <li>Grosor: {selectedProduct.Thickness} mm</li>
-              <li>Existencias: {selectedProduct.Quantity}</li>
+              <li>Bodega: {stores.find((store) => store.Id === selectedProduct.WarehouseId)?.Name}</li>
             </ul>
             <div className="flex justify-end space-x-4">
               <button
-                onClick={() => openUpdate(true)}
-                className="ml-4 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
-              >
-                Aumentar existencias
-              </button>
-              <button
-                onClick={() => openUpdate(false)}
-                className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
-              >
-                Reducir existencias
-              </button>
-              <button
                 onClick={closeModal}
-                className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {showUpdate && selectedProduct && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 className="text-lg font-semibold mb-4">
-              {selectedAction === true
-                ? "¿Cuanto desea agregar a las existencias?"
-                : "¿Cuanto desea reducir de las existencias?"}
-            </h2>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              placeholder="Ingrese la cantidad"
-              className="block w-full mt-2 p-2 border border-gray-300 rounded"
-            />
-            <ul className="list-disc pl-5 space-y-2 mb-4 text-gray-700"></ul>
-            <div className="flex justify-end space-x-4">
-              {selectedAction === true ? (
-                <button
-                  onClick={() => {
-                    const updater = {
-                      Material: selectedProduct.MaterialInfoName,
-                      Type: selectedProduct.TypeInfoName,
-                      Large: selectedProduct.Large,
-                      Width: selectedProduct.Width,
-                      Thickness: selectedProduct.Thickness,
-                      Quantity: quantity,
-                    };
-                    handleUpdateQuantity(updater);
-                    closeUpdate();
-                    closeModal();
-                  }}
-                  className="ml-4 px-4 py-2 text-black rounded-lg shadow-md hover:bg-gray-100 transition"
-                >
-                  Agregar
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    const updater = {
-                      Material: selectedProduct.MaterialInfoName,
-                      Type: selectedProduct.TypeInfoName,
-                      Large: selectedProduct.Large,
-                      Width: selectedProduct.Width,
-                      Thickness: selectedProduct.Thickness,
-                      Quantity: -quantity,
-                    };
-                    handleUpdateQuantity(updater);
-                    closeUpdate();
-                    closeModal();
-                  }}
-                  className="ml-4 px-4 py-2 text-black rounded-lg shadow-md hover:bg-gray-100 transition"
-                >
-                  Reducir
-                </button>
-              )}
-
-              <button
-                onClick={closeUpdate}
                 className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
               >
                 Cancelar
@@ -204,4 +102,4 @@ const ProductList = ({ products }) => {
   );
 };
 
-export default ProductList;
+export default AreasInfo;

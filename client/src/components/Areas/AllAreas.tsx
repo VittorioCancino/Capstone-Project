@@ -18,22 +18,6 @@ const AllAreas: React.FC<AllareasProps> = ({ filter }) => {
 
     const [areas, setareas] = useState<Areas[]>([]);
 
-    const { data, error, isError, isLoading } = useQuery(
-        "areas",
-        GetAllMaterials,
-        {
-            onSuccess: (data) => {
-                setareas(data.data);
-            },
-            onError: (error: Error) => {
-                toast.error(error.message);
-            },
-        }
-    );
-
-    if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error: {error?.message}</p>;
-
     return (
         <div className="text-center flex flex-col items-start space-y-2 whitespace-nowrap">
             <h4 className="font-semibold text-gray-700 underline mb-2">
