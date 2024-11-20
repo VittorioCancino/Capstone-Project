@@ -2,14 +2,13 @@ import React from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import { CreateType } from "../../types";
+import { CreateMaterial } from "../../types";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import { GetAllWarehouses } from "../../api/WarehouseApi";
-import { CreateTypes, RemoveTypes, GetAllTypes } from "../../api/TypeApi";
+import { CreateMaterials, RemoveMaterials, GetAllMaterials } from "../../api/MaterialApi";
 
 
-interface Group {
+interface Material {
     Id: number;
     Name: string;
 }
@@ -19,51 +18,53 @@ const AddDeleteButton = () => {
     const queryClient = useQueryClient();
 
     const [showModal, setShowModal] = useState(false);
-    const [groupName, setGroupName] = useState("");
+    const [MaterialName, setMaterialName] = useState("");
     const [addOrDelete, setAddOrDelete] = useState("");
-    const [groups, setGroups] = useState<Group[]>([]);
+    const [Materials, setMaterials] = useState<Material[]>([]);
 
-    const initialValuesGroup: CreateType = {
+    const initialValuesMaterial: CreateMaterial = {
+        MaterialName: "",
         GroupName: "",
     };
 
-    const initialValuesGroupD: CreateType = {
-        GroupName: ""
+    const initialValuesMaterialD: CreateMaterial = {
+        MaterialName: "",
+        GroupName: "",
     };
 
     const {
-        register: registerWarehouse,
-        formState: { errors: errorsWare },
-        handleSubmit: handleSubmitWarehouse,
-        reset: resetGroup,
-    } = useForm<CreateType>({ defaultValues: initialValuesGroup });
+        register: registerMaterial,
+        formState: { errors: errorsMaterial },
+        handleSubmit: handleSubmitMaterial,
+        reset: resetMaterial,
+    } = useForm<CreateMaterial>({ defaultValues: initialValuesMaterial });
 
     const {
-        register: registerWarehouseD,
-        formState: { errors: errorsWareD },
-        handleSubmit: handleSubmitWarehouseD,
-        reset: resetGroupD,
-    } = useForm<CreateType>({ defaultValues: initialValuesGroupD });
+        register: registerMaterialD,
+        formState: { errors: errorsMaterialD },
+        handleSubmit: handleSubmitMaterialD,
+        reset: resetMaterialD,
+    } = useForm<CreateMaterial>({ defaultValues: initialValuesMaterialD });
 
-    const { mutate: mutateGroup } = useMutation(CreateTypes, {
+    const { mutate: mutateMaterial } = useMutation(CreateMaterials, {
         onError: (error: Error) => {
             toast.error(error.message);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries("groups");
-            toast.success("Bodega creado exitosamente");
-            resetGroup();
+            queryClient.invalidateQueries("materials");
+            toast.success("Material creado exitosamente");
+            resetMaterial();
         },
     });
 
-    const { mutate: mutateGroupR } = useMutation(RemoveTypes, {
+    const { mutate: mutateMaterialR } = useMutation(RemoveMaterials, {
         onError: (error: Error) => {
             toast.error(error.message);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries("groups");
-            toast.success("Bodega eliminado exitosamente");
-            resetGroupD();
+            queryClient.invalidateQueries("materials");
+            toast.success("Material eliminado exitosamente");
+            resetMaterialD();
         },
     });
 
@@ -74,37 +75,38 @@ const AddDeleteButton = () => {
     const openModal = () => setShowModal(true);
     const closeModal = () => {
         setShowModal(false);
-        setGroupName("");
+        setMaterialName("");
     };
 
     const handleAddSubmit = () => {
-        const formData: CreateType = {
-            GroupName: groupName
+        const formData: CreateMaterial = {
+            MaterialName: MaterialName,
+            GroupName: "",
         };
-        mutateGroup(formData);
+        mutateMaterial(formData);
         closeModal();
     };
 
     const handleDeleteSubmit = () => {
-        const formData: CreateType = {
-            GroupName: groupName,
+        const formData: CreateMaterial = {
+            MaterialName: MaterialName,
+            GroupName: "",
         };
-        console.log(formData);
-        mutateGroupR(formData);
+        mutateMaterialR(formData);
         closeModal();
     };
 
-    const handleNameChange = (event) => setGroupName(event.target.value);
+    const handleNameChange = (event) => setMaterialName(event.target.value);
     const handleNameChange2 = (value) => {
-        setGroupName(value);
+        setMaterialName(value);
     };
 
-    const { data: GroupsData, error: GroupsError, isError: isGroupsError, isLoading: isGroupsLoading, } = useQuery(
-        "groups",
-        GetAllTypes,
+    const { data: MaterialsData, error: MaterialsError, isError: isMaterialsError, isLoading: isMaterialsLoading, } = useQuery(
+        "materials",
+        GetAllMaterials,
         {
             onSuccess: (data) => {
-                setGroups(data.data);
+                setMaterials(data.data);
             },
             onError: (error: Error) => {
                 toast.error(error.message);
@@ -122,7 +124,7 @@ const AddDeleteButton = () => {
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition"
             >
-                Crear nuevo grupo
+                Crear nuevo material
             </button>
 
             {/* Botón Eliminar */}
@@ -133,17 +135,17 @@ const AddDeleteButton = () => {
                 }}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition"
             >
-                Eliminar grupo
+                Eliminar material
             </button>
             {showModal && addOrDelete === "Agregar" && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h2 className="text-lg font-semibold mb-4">Ingresar datos</h2>
                         <label className="block mb-4">
-                            <span className="text-gray-700">Nombre del grupo:</span>
+                            <span className="text-gray-700">Nombre del material:</span>
                             <input
                                 type="text"
-                                value={groupName}
+                                value={MaterialName}
                                 onChange={handleNameChange}
                                 placeholder={``}
                                 className="block w-full mt-1 p-2 border border-gray-300 rounded"
@@ -173,18 +175,18 @@ const AddDeleteButton = () => {
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h2 className="text-lg font-semibold mb-4">Ingresar datos</h2>
                         <label className="block mb-4">
-                            <span className="text-gray-700">Nombre del Group:</span>
+                            <span className="text-gray-700">Nombre del material:</span>
                             <select
-                                value={groupName}
+                                value={MaterialName}
                                 onChange={(e) => {
-                                    setGroupName(e.target.value);
+                                    setMaterialName(e.target.value);
                                 }}
                                 className="block w-full mt-1 p-2 border border-gray-300 rounded"
                             >
-                                <option value="" disabled>Seleccione un grupo:</option>
-                                {groups.map((Group) => (
-                                    <option key={Group.Id} value={Group.Name}>
-                                        {Group.Name}
+                                <option value="" disabled>Seleccione un material:</option>
+                                {Materials.map((Material) => (
+                                    <option key={Material.Id} value={Material.Name}>
+                                        {Material.Name}
                                     </option>
                                 ))}
                             </select>

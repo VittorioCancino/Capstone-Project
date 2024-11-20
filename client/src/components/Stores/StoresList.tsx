@@ -3,7 +3,6 @@ import StoresInfo from "./StoresInfo";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import AllStores from "./AllStores";
 import { CreateWarehouse } from "../../types";
 import { CreateWarehouses, GetAllWarehouses, RemoveWarehouses } from "../../api/WarehouseApi";
 import { useForm } from "react-hook-form";

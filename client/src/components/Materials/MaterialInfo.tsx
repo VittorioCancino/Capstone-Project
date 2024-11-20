@@ -3,14 +3,14 @@ import { useQueryClient, useQuery } from "react-query";
 import { toast } from "react-toastify";
 import { GetAllMaterials } from "../../api/MaterialApi";
 
-interface Group {
+interface Material {
   Name: string;
 }
-const GroupInfo = ({ materials }) => {
+const MaterialInfo = ({ materials }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Group | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Material | null>(null);
   const [selectedAction, setSelectedAction] = useState(true);
   const [filter, setFilter] = useState(null);
 
@@ -86,4 +86,4 @@ const GroupInfo = ({ materials }) => {
   );
 };
 
-export default GroupInfo;
+export default MaterialInfo;

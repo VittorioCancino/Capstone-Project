@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient, useQuery } from "react-query";
 import { ToastContainer, toast } from "react-toastify";
 import { GetAllTypes } from "../../api/TypeApi";
+import { GetAllAreas } from "../../api/AreaApi";
 
 interface Type {
   Id: number;
@@ -11,13 +12,20 @@ interface Type {
 }
 
 interface AllTypesProps {
-  filter: (filterValue: string) => void;
+  filter: (filterValue: { AreaId?: number }) => void;
 }
 
 const AllTypes: React.FC<AllTypesProps> = ({ filter }) => {
-  const [types, setTypes] = useState<Type[]>([]);
 
-  const { data, error, isError, isLoading } = useQuery("types", GetAllTypes, {
+  const [types, setTypes] = useState<Type[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const handleClick = (id: number) => {
+    setSelectedId(id);
+    filter({ AreaId: id });
+  };
+
+  const { data, error, isError, isLoading } = useQuery("types", GetAllAreas, {
     onSuccess: (data) => {
       setTypes(data.data);
     },
@@ -38,8 +46,8 @@ const AllTypes: React.FC<AllTypesProps> = ({ filter }) => {
         {types.map((type) => (
           <li
             key={type.Id}
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onClick={() => filter(type.Name)}
+            className={`cursor-pointer px-2 py-1 rounded ${selectedId === type.Id ? "bg-blue-500 text-white" : "hover:bg-gray-100"}`}
+            onClick={() => handleClick(type.Id)}
           >
             {type.Name}
           </li>

@@ -11,11 +11,19 @@ interface Material {
 }
 
 interface AllMaterialsProps {
-  filter: (filterValue: string) => void;
+  filter: (filterValue: { MaterialInfoName?: string }) => void;
 }
 
 const AllMateriales: React.FC<AllMaterialsProps> = ({ filter }) => {
+
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+
+  const handleClick = (id: number, name: string) => {
+    setSelectedId(id);
+    filter({ MaterialInfoName: name });
+  };
 
   const { data, error, isError, isLoading } = useQuery(
     "materials",
@@ -42,8 +50,8 @@ const AllMateriales: React.FC<AllMaterialsProps> = ({ filter }) => {
         {materials.map((material) => (
           <li
             key={material.Id}
-            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-            onClick={() => filter(material.Name)}
+            className={`cursor-pointer px-2 py-1 rounded ${selectedId === material.Id ? "bg-blue-500 text-white" : "hover:bg-gray-100"}`}
+            onClick={() => handleClick(material.Id, material.Name)}
           >
             {material.Name}
           </li>

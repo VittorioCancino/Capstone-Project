@@ -12,14 +12,14 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
 
     return (
         <div className="h-full w-64 bg-gray-100 p-4 border-r shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Filters</h2>
+            <h2 className="text-xl font-bold mb-4">Industria Convertidora</h2>
             <ul className="space-y-4">
                 <li>
                     <button
                         onClick={() => setFilterComponent(null)}
                         className="w-full text-left p-2 hover:bg-gray-200 rounded"
                     >
-                        🏠 Todos los productos
+                        🏠 Inventario
                     </button>
                 </li>
                 <li className="relative">
@@ -27,7 +27,7 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                         onClick={() => setShowDropdown(!showDropdown)}
                         className="w-full text-left p-2 hover:bg-gray-200 rounded"
                     >
-                        📦 Admin
+                        📦 Categorías
                         <span className="ml-2">▼</span>
                     </button>
                     {showDropdown && (
@@ -59,26 +59,16 @@ const SideBar: React.FC<SideBarProps> = ({ setFilterComponent }) => {
                                     >
                                         Materiales
                                     </h4>
+                                    <h4
+                                        className="font-semibold text-gray-700 mb-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded w-[200px]"
+                                        onClick={() => { setFilterComponent("Products"); setShowDropdown(!showDropdown) }}
+                                    >
+                                        Productos
+                                    </h4>
                                 </div>
                             </div>
                         </div>
                     )}
-                </li>
-                <li>
-                    <button
-                        onClick={() => setFilterComponent("Users")}
-                        className="w-full text-left p-2 hover:bg-gray-200 rounded"
-                    >
-                        👥 Users
-                    </button>
-                </li>
-                <li>
-                    <button
-                        onClick={() => setFilterComponent("Reports")}
-                        className="w-full text-left p-2 hover:bg-gray-200 rounded"
-                    >
-                        📊 Reports
-                    </button>
                 </li>
             </ul>
         </div>
