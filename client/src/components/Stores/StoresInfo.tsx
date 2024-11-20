@@ -97,16 +97,16 @@ const StoresInfo = ({ stores }) => {
               <li>Email: {selectedStore.Email}</li>
               <li>Horarios: {selectedStore.Schedule}</li>
               <li>Areas:</li>
-              <ul className="list-decimal pl-10 space-y-2 mb-4 text-gray-700 ">
-                {filteredStores.map((area) => (
-                  <li
-                    key={area.Id}
-                    className="list-decimal cursor-pointer px-2 py-1 rounded"
-                  >
-                    {area.Name}
-                  </li>
-                ))}
-              </ul>
+            </ul>
+            <ul className="list-decimal pl-10 space-y-2 mb-4 text-gray-700 ">
+              {filteredStores.map((area) => (
+                <li
+                  key={area.Id}
+                  className="list-decimal cursor-pointer px-2 py-1 rounded"
+                >
+                  {area.Name}
+                </li>
+              ))}
             </ul>
             <div className="flex justify-end space-x-4">
               <button
