@@ -51,7 +51,7 @@ const ProductList = ({ filter }) => {
 
   return (
     <div>
-      <h1 className="text-4xl underline text-center mt-6">Distribuciones</h1>
+      <h1 className="text-4xl underline text-center mt-6">Inventario</h1>
       <div className="relative mt-8 mb-8">
         <div className="flex items-center space-x-4">
           <AddDeleteButton setFilter={setFilter} />
