@@ -32,9 +32,9 @@ function Home() {
 
   return (
     <>
-      <div className="flex mt-24">
+      <div className="flex">
         <SideBar setFilterComponent={setFilterComponent} />
-        <div className="flex-grow ml-8 mr-8">{renderComponent()}</div>
+        <div className="flex-grow ml-16 mr-16">{renderComponent()}</div>
       </div>
     </>
   );
