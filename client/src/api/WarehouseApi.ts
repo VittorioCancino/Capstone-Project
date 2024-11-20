@@ -1,6 +1,6 @@
 import API_WARE from "../lib/AxiosWarehouse";
 import { isAxiosError } from "axios";
-import { CreateType, CreateWarehouse } from "../types";
+import { CreateWarehouse, DeleteWarehouse } from "../types";
 
 export async function CreateWarehouses(formdata: CreateWarehouse) {
 	try {
@@ -15,7 +15,7 @@ export async function CreateWarehouses(formdata: CreateWarehouse) {
 	}
 }
 
-export async function RemoveWarehouses(formdata: CreateWarehouse) {
+export async function RemoveWarehouses(formdata: DeleteWarehouse) {
 	try {
 		const url = "/remove-warehouse";
 		const { data } = await API_WARE.post(url, formdata);

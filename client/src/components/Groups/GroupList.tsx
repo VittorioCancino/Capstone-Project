@@ -1,35 +1,33 @@
 import React from "react";
-import AreasInfo from "./AreasInfo";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import { GetAllAreas } from "../../api/AreaApi";
 import { useQueryClient } from "react-query";
 import AddDeleteButton from "./AddDeleteButton";
+import { GetAllTypes } from "../../api/TypeApi";
+import GroupInfo from "./GroupInfo";
 
-
-interface Area {
+interface Group {
   Name: string;
-  WName: string;
 }
 
-const AreaList = () => {
+const GroupList = () => {
 
   const queryClient = useQueryClient();
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [filter, setFilter] = useState(null);
-  const [area, setArea] = useState<Area[]>([]);
+  const [group, setGroup] = useState<Group[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [productName, setProductName] = useState("");
   const [addOrDelete, setAddOrDelete] = useState("");
 
   const { data, error, isError, isLoading } = useQuery(
-    "areas",
-    GetAllAreas,
+    "groups",
+    GetAllTypes,
     {
       onSuccess: (data) => {
-        setArea(data.data);
+        setGroup(data.data);
       },
       onError: (error: Error) => {
         toast.error(error.message);
@@ -44,20 +42,20 @@ const AreaList = () => {
     setFilter(filterValue);
   };
 
-  const filteredAreas = filter
-    ? area.filter((area) => area.Name === filter)
-    : area;
+  const filteredGroups = filter
+    ? group.filter((Group) => Group.Name === filter)
+    : group;
 
   return (
     <>
       <div>
-        <h1 className="text-4xl underline text-center mt-6">Areas</h1>
+        <h1 className="text-4xl underline text-center mt-6">Groups</h1>
         <div className="relative mt-8 mb-8">
           <div className="flex items-center space-x-4">
             <AddDeleteButton />
           </div>
         </div>
-        <AreasInfo areas={filteredAreas} />
+        <GroupInfo groups={filteredGroups} />
       </div>
 
 
@@ -66,5 +64,5 @@ const AreaList = () => {
   );
 };
 
-export default AreaList;
+export default GroupList;
 

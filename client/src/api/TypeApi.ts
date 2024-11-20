@@ -4,7 +4,7 @@ import { CreateType } from "../types";
 
 export async function CreateTypes(formdata: CreateType) {
 	try {
-		const url = "/create-type";
+		const url = "/create-group";
 		const { data } = await API_TYPE.post(url, formdata);
 		//console.log("Response from API Type:", data);
 		return data;
@@ -17,7 +17,7 @@ export async function CreateTypes(formdata: CreateType) {
 
 export async function RemoveTypes(formdata: CreateType) {
 	try {
-		const url = "/Remove-type";
+		const url = "/remove-group";
 		const { data } = await API_TYPE.post(url, formdata);
 		//console.log("Response from API Type:", data);
 		return data;
@@ -30,7 +30,7 @@ export async function RemoveTypes(formdata: CreateType) {
 
 export async function GetAllTypes() {
 	try {
-		const url = "/get-all-types";
+		const url = "/get-all-groups";
 		const { data } = await API_TYPE.get(url);
 		//console.log("Response from API Types:", data);
 		return data;
